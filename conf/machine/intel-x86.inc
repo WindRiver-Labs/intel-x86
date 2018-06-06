@@ -42,7 +42,6 @@ VIRTUAL-RUNTIME_graphical_init_manager ?= "xserver-nodm-init"
 XSERVER ?= "xserver-xorg \
 	   xserver-xorg-extension-dri \
 	   xserver-xorg-extension-dri2 \
-	   xserver-xorg-extension-glx \
 	   xserver-xorg-extension-extmod \
 	   xserver-xorg-extension-dbe \
 	   xserver-xorg-module-libint10 \
@@ -53,15 +52,13 @@ XSERVER ?= "xserver-xorg \
 	   xf86-input-synaptics \
 	   xf86-video-vesa \
 	   xf86-video-fbdev \
-	   xf86-video-intel \
 	   xf86-video-mga \
 	   xf86-video-modesetting \
-	   xf86-video-ati \
-	   mesa \
-	   mesa-driver-i915 \
-	   mesa-driver-i965 \
-	   mesa-driver-swrast \
-	   mesa-demos \
+	   \
+	   ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'mesa-driver-swrast xserver-xorg-extension-glx', '', d)} \
+	   ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'mesa-driver-i915 mesa-driver-i965', '', d)} \
+	   ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'mesa mesa-demos', '', d)} \
+	   ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'xf86-video-ati xf86-video-intel', '', d)} \
 	   ${VIRTUAL-RUNTIME_xserver_common} \
 	   matchbox-wm"
 
