@@ -27,6 +27,8 @@ DEPENDS_append_intel-x86-32 = " cdrtools-native"
 KERNELLOADEREXTENSION_append_intel-x86-64 = " kernel-grub"
 KERNELLOADEREXTENSION_append_intel-x86-32 = " kernel-grub"
 
+TARGET_SUPPORTED_KTYPES_intel-x86 = "standard preempt-rt"
+
 do_install_append_intel-x86() {
 	rm -rf ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/crypto
 }
