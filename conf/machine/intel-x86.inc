@@ -81,7 +81,7 @@ TARGET_QEMU_CPU="Nehalem"
 
 IMAGE_FSTYPES += "live wic wic.bmap"
 
-WKS_FILE ?= "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'systemd-bootdisk.wks', 'mkefidisk.wks', d)}"
+WKS_FILE ?= "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'systemd-bootdisk.wks', 'intel-x86-mkefidisk.wks', d)}"
 do_image_wic[depends] += "gptfdisk-native:do_populate_sysroot"
 do_image_wic[recrdeptask] += "do_bootimg"
 
