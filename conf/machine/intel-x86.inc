@@ -73,6 +73,8 @@ PREFERRED_VERSION_grub-efi ?= "2.02"
 
 PREFERRED_VERSION_autoconf-archive ?= "2016.09.16"
 
+PREFERRED_PROVIDER_virtual/kernel ??= "linux-yocto-dev"
+
 TARGET_QEMU_BIN = "qemu-system-x86_64"
 TARGET_QEMU_KERNEL="bzImage"
 TARGET_QEMU_KERNEL_OPTS="selinux=0 enforcing=0"
