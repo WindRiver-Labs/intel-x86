@@ -81,7 +81,7 @@ The following BSP features are validated and supported.
 
 	o Storage
 		+ SATA: AHCI SATA controller
-		+ NVMe: PCI Express based Solid-State Drives (SSD)
+			+ SATA 0 (Blue) for NGFF M.2 Rise Card
 		+ eMMC card: Secure Digital Host Controller
 
 	o Multimedia
