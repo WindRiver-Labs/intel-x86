@@ -13,10 +13,13 @@ Table of Contents
 This BSP supports the following boards:
 
 	+ Intel Harcuvar platform: Atom Pocessor, Denverton-NS SoC, (Harcuvar)
+	+ Intel NUC Platform: Broadwell-U processor, Broadwell PCH (WildcatPoint-LP), (NUC5i3MYBE)
+
 
 2. Change History
 =================
 
+	- 2018/09 (US116940) Add NUC5i3MYBE support
 	- 2018/08 (US115507) Update Harcuvar for LTS-18 and cleanup README.
 	          Remove support for Bakerville, Purley 4S and Intel NUC7i5BNH.
 	- 2018/01 (US108147) Add Bakerville support
@@ -121,4 +124,99 @@ Add "video=efifb:off" to kernel cmdline to kill this error.
 
 2) After waking up from S4, serial port console doesn't work.
 Add "no_console_suspend" to kernel cmdline as a workaround.
+
+3.2 Intel NUC5i3MYBE
+--------------------
+
+NUC5i3MYBE board built with a 5th generation Intel CoreTM i3 processor
+code name Broadwell-U, wifi and onboard ethernet support,  with Intel
+HD Graphics 5500.
+
+3.2.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may possibly have some issues.
+
+[Board info]
+	Vendor: Intel Corporation
+	Platform: NUC5i3MYBE
+
+[BIOS info]
+	Bios Version: MYBDWi30.86A.0017.2014.1127.1854
+
+[Processor info]
+	Codename: Broadwell-U
+	Brand: Intel(R) Core(TM) i3-5010U CPU @ 2.10GHZ
+	Core: 4
+	ID: 0x306D4
+	Stepping: 4h
+
+[Chipset info]
+	Codename: WildcatPoint-LP
+
+3.2.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported on boards where
+the corresponding h/w features exist.
+
+	o General Platform
+		+ perf: H/W based PMU
+
+	o Bus
+		+ PCI/PCI-Express
+		+ I2C/SMBus:
+			+ Intel i801 family I2C/SMBus controller
+
+	o Network
+		+ Intel E1000E Gigabit Ethernet:
+			+ Onboard I218-V GbE
+		+ WIFI:
+			Intel Corporation Wireless 7260 (Intel Corporation Dual Band Wireless-AC 7260 adapter with Bluetooth)
+
+	o USB
+		+ USB 3.0 XHCI controller
+
+	o Storage
+		+ SATA: AHCI SATA controller
+		+ SSD card
+
+	o Multimedia
+		+ Intel HD Audio:
+			+ Mini DisplayPort HD Audio
+			+ Analog Audio Jack
+		+ Graphics:
+			+ Intel Corporation Broadwell-U Integrated Graphics
+
+	o Power Management
+		+ Suspend to RAM: ACPI S3
+		+ Suspend to DISK: ACPI S4
+		+ CPU Freq: ACPI P-state
+		+ CPU Idle: ACPI C-state
+
+	o Misc Devices
+		+ UART: 8250/16550A compatible serial port(internal 9pin header)
+		+ RTC: PC-style CMOS RTC
+		+ Input deivce
+			+ USB mouse & keyboard
+		+ Watchdog: Intel iTCO H/W Watchdog timer
+		+ HW Monitor: Intel CPU core temperature sensor
+		+ Trusted Platform Module
+
+3.2.3 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated:
+	x eDP connector
+	x NFC header
+	x High Speed Custom Solutions connector
+
+3.2.4 Known Issues
+~~~~~~~~~~~~~~~~~~
+
+Board will hang when run glxgears 2D/3D test, Upstream also exist the issue.
+Before we fix it, provide the following method to avoid it.
+Workaround:
+   Add "intel_idle.max_cstate=[0,1,2]" to kernel boot parameter.
 
