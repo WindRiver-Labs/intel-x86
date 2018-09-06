@@ -1,5 +1,17 @@
 COMPATIBLE_MACHINE_intel-x86-64 = "intel-x86-64"
 COMPATIBLE_MACHINE_intel-x86-32 = "intel-x86-32"
+COMPATIBLE_MACHINE_intel-broadwell-64 = "intel-broadwell-64"
+COMPATIBLE_MACHINE_intel-broadwell-32 = "intel-broadwell-32"
+COMPATIBLE_MACHINE_intel-haswell-64 = "intel-haswell-64"
+COMPATIBLE_MACHINE_intel-haswell-32 = "intel-haswell-32"
+COMPATIBLE_MACHINE_intel-kabylake-64 = "intel-kabylake-64"
+COMPATIBLE_MACHINE_intel-kabylake-32 = "intel-kabylake-32"
+COMPATIBLE_MACHINE_intel-skylake-64 = "intel-skylake-64"
+COMPATIBLE_MACHINE_intel-skylake-32 = "intel-skylake-32"
+COMPATIBLE_MACHINE_intel-skylake-avx512-64 = "intel-skylake-avx512-64"
+COMPATIBLE_MACHINE_intel-skylake-avx512-32 = "intel-skylake-avx512-32"
+COMPATIBLE_MACHINE_intel-vmware-guest-64 = "intel-vmware-guest-64"
+COMPATIBLE_MACHINE_intel-vmware-guest-32 = "intel-vmware-guest-32"
 
 #
 #

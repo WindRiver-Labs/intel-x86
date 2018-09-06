@@ -69,22 +69,29 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
-2. BSP Kernel and Distros
-=========================
 
-The following table summarizes the valid Wind River Linux distros for this BSP.
-'Y' in each content cell stands for supported; 'N' stands for not supported:
+2. BSP Kernel and RootFS Combination
+====================================
 
-  +--------------+-------------+-------------+-------------+
-  | valid/distro |   wrlinux   | wrlinux-cgl | wrlinux-ovp |
-  +--------------+-------------+-------------+-------------+
-  |    valid     |      Y      |      Y      |      Y      |
-  +--------------+-------------+-------------+-------------+
+The validity of WindRiver Linux kernel and RootFS combination for this BSP is
+in the table.
+The leftmost column of the table is the kernel type, and the top line is the
+RootFS type.
+'Y' in each content cell stands for the combination is supported; 'N' stands
+for not supported:
 
-For the supported kernel type for this BSP, please check the TARGET_SUPPORTED_KTYPES
-by running 'bitbake -e | grep "^TARGET_SUPPORTED_KTYPES"'.
+--------------------------------------------------------------------
+| kernel/rootfs | glibc-std | glibc-small | glibc-cgl | glibc-tiny |
+--------------------------------------------------------------------
+|   standard    |     Y     |      Y      |     N     |     Y      |
+--------------------------------------------------------------------
+|   preempt-rt  |     Y     |      Y      |     N     |     Y      |
+--------------------------------------------------------------------
+|   cgl         |     N     |      N      |     N     |     N      |
+--------------------------------------------------------------------
 
-Note: The preempt-rt kernel type can be used with this BSP/Machine.
+Note: with regard to the kernel and RootFS type, please refer to WindRiver Linux
+specification for details.
 
 3. BSP Specific Patches
 =======================
@@ -332,6 +339,8 @@ refer to README.hardware for details about the targets affected by this problem.
 To minimize conflicts among them, the iTCO_wdt, ipmi_watchdog and mei are 
 compiled as modules, but you still need to use "modprobe -r" to unload all 
 watchdog drivers and re-install the driver you desire.
+3) In order to run haswell/broadwell targets under qemu '-enable-kvm' is required.
+$ make start-target EX_TARGET_QEMU_OPTS='-enable-kvm'
 
 5.2 Standby (ACPI S1), Suspend to RAM (ACPI S3) & Suspend to Disk (ACPI S4)
 ===========================================================================

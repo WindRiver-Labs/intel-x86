@@ -1,0 +1,81 @@
+
+               Intel Haswell BSP
+
+1. About this document
+======================
+
+This BSP is optimized for the platforms based on Intel Haswell CPU.
+This BSP uses kernel and package architecture in the intel-x86 layer.
+
+This document describes the dedicated contents for optimized features
+and specific information.
+
+Please refer to README.hardware of intel-x86 for specific hardware information.
+Please refer to README of intel-x86 for common intel-x86 information.
+
+Dependencies
+------------
+This layer depends on the oe-core version supplied with Wind River
+Linux, the wr-kernel and intel-x86 bsp layer.
+
+Maintenance
+-----------
+This layer is maintained by Wind River Systems, Inc.
+Contact <support@windriver.com> or your support representative for more
+information on submitting changes.
+
+Building the intel-haswell layer
+----------------------------------
+This layer and the wr-kernel layer should be added to bblayers.conf. This
+is done automatically when using the Wind River configure wrapper.
+
+Note:
+To build a 64-bit kernel + 64-bit rootfs, use:
+
+    --enable-board=intel-haswell-64
+
+To build a 32-bit kernel + 32-bit rootfs combination, use
+the following configuration:
+
+    --enable-board=intel-haswell-32
+
+License
+-------
+Copyright (C) 2014 Wind River Systems, Inc.
+
+Source code included in the tree for individual recipes is under the LICENSE
+stated in the associated recipe (.bb file) unless otherwise stated.
+
+The metadata is under the following license unless otherwise stated.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+
+2. BSP Specific Patches
+=======================
+
+To get a list of patches applied to the kernel specific to this BSP along with
+patch descriptions use git-whatchanged on the default kernel
+(git-whatchanged <kernel_type>..<bsp_name>). For example:
+
+        %> cd build/linux-windriver-<version>/linux
+        %> git whatchanged standard/base..standard/intel-x86-64
+
+Note:
+intel-haswell uses the same branch as intel-x86 common bsp.

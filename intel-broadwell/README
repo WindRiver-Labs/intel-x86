@@ -1,0 +1,66 @@
+
+               Intel Broadwell BSP
+
+1. About this document
+======================
+
+This BSP is optimized for the platforms based on Intel Broadwell CPU.
+This BSP uses kernel and package architecture in the intel-x86 layer.
+
+This document describes the dedicated contents for optimized features
+and specific information.
+
+Please refer to README.hardware of intel-x86 for specific hardware information.
+Please refer to README of intel-x86 for common intel-x86 information.
+
+
+Dependencies
+------------
+This layer depends on the oe-core version supplied with Wind River
+Linux, the wr-kernel and intel-x86 bsp layer.
+
+Maintenance
+-----------
+This layer is maintained by Wind River Systems, Inc.
+Contact <support@windriver.com> or your support representative for more
+information on submitting changes.
+
+Building the intel-broadwell layer
+----------------------------------
+This layer and the wr-kernel layer should be added to bblayers.conf. This
+is done automatically when using the Wind River configure wrapper.
+
+Note:
+To build a 64-bit kernel + 64-bit rootfs, use:
+
+    --enable-board=intel-broadwell-64
+
+To build a 32-bit kernel + 32-bit rootfs combination, use
+the following configuration:
+
+    --enable-board=intel-broadwell-32
+
+License
+-------
+Copyright (C) 2013 Wind River Systems, Inc.
+
+The right to copy, distribute or otherwise make use of this software may
+be licensed only pursuant to the terms of an applicable Wind River license
+agreement. No license to Wind River intellectual properly rights is granted
+herein. All rights not licensed by Wind River are reserved by Wind River.
+
+Source code included in the tree for individual recipes is under the LICENSE
+stated in each recipe (.bb file) unless otherwise stated.
+
+2. BSP Specific Patches
+=======================
+
+To get a list of patches applied to the kernel specific to this BSP along with
+patch descriptions use git-whatchanged on the default kernel
+(git-whatchanged <kernel_type>..<bsp_name>). For example:
+
+        %> cd build/linux-windriver-<version>/linux
+        %> git whatchanged standard/base..standard/intel-x86-64
+
+Note:
+intel-broadwell use the same branch as intel-x86 common bsp.
