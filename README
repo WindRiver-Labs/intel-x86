@@ -256,8 +256,8 @@ Note:
   follows:
 
        # cd path_to_your_project/build
-       # bitbake -c menuconfig linux-windriver
-       # bitbake linux-windriver
+       # bitbake -c menuconfig virtual/kernel
+       # bitbake virtual/kernel
 
   Or use the following command to re-config busybox:
        # bitbake -c menuconfig busybox
@@ -1028,7 +1028,7 @@ Please see Documentation/edac.txt for more details.
 
 There is a related README about NFC for references in the following directory:
 
-  path_to_WRLinux_product/layers/wr-kernel/templates/feature/nfc
+  path_to_WRLinux_product/layers/wrlinux/wrlinux-distro/templates/feature/nfc
 
 5.14 Bluetooth
 ==============
