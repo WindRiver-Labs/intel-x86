@@ -80,7 +80,9 @@ TARGET_QEMU_BOOT_CONSOLE="ttyS0,115200"
 TARGET_QEMU_OPTS="-show-cursor -usb -usbdevice wacom-tablet -vga vmware"
 TARGET_QEMU_CPU="Nehalem"
 
-IMAGE_FSTYPES += "wic wic.bmap live"
+# avoid grub-efi problems when limited to GPLv2
+IMAGE_FSTYPES += "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', '', 'live wic wic.bmap', d)}"
+
 WKS_FILE ?= "mkefidisk.wks"
 do_image_wic[depends] += "gptfdisk-native:do_populate_sysroot"
 do_image_wic[recrdeptask] += "do_bootimg"
