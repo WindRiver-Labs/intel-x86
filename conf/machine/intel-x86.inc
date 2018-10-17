@@ -5,7 +5,6 @@
 MACHINE_FEATURES += "x86 pci usbhost ext2 keyboard screen alsa acpi vfat serial"
 MACHINE_FEATURES += "efi pcbios"
 MACHINE_FEATURES += "parser shell-tools filesystem profile network"
-DISTRO_FEATURES_append = " vfat wifi bluetooth pci"
 
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-iwlwifi-6000g2a-6"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-iwlwifi-6000g2b-6"
@@ -19,13 +18,6 @@ MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-iwlwifi-7265d"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-i915"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-ibt-12-16"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-rtl8723"
-
-# The diffutils which is runtime depended by grub needs
-# eglibc to enable the following options.
-DISTRO_FEATURES_LIBC_TINY_append = " libc-posix-clang-wchar \
-                                     libc-locales \
-                                     libc-locale-code \
-"
 
 KERNEL_IMAGETYPE = "bzImage"
 
