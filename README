@@ -1,0 +1,1198 @@
+
+               Intel X86 BSP
+
+1. About this document
+======================
+
+This is the intel-common BSP, also known as intel-x86-32/64, provide a few
+carefully selected tune options and generic hardware support to cover
+the majority of current Intel CPUs and devices. The naming follows the
+convention of intel-<TUNE>-<BITS>, where TUNE is the gcc cpu-type (used
+with mtune and march typically) and BITS is either 32 bit or 64 bit.
+
+Please see the README files contained in the individual BSP layers for
+BSP-specific information.
+
+This document describes common and non-hardware specific information.
+Please refer to README.hardware for hardware specific information.
+
+Dependencies
+------------
+This layer depends on the oe-core version supplied with linux-yocto
+kernel.
+
+Maintenance
+-----------
+This layer is maintained by Wind River Systems, Inc.
+Contact <support@windriver.com> or your support representative for more
+information on submitting changes.
+
+Building the intel-x86 layer
+----------------------------------
+This layer should be added to bblayers.conf. This is done automatically
+when using the Wind River setup.sh wrapper.
+
+Note:
+To build a 64-bit kernel + 64-bit rootfs, use:
+
+    --machine=intel-x86-64
+
+To build a 32-bit kernel + 32-bit rootfs combination, use
+the following configuration:
+
+    --machine=intel-x86-32
+
+License
+-------
+Copyright (C) 2017 Wind River Systems, Inc.
+
+Source code included in the tree for individual recipes is under the LICENSE
+stated in the associated recipe (.bb file) unless otherwise stated.
+
+The metadata is under the following license unless otherwise stated.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+
+2. BSP Kernel and RootFS Combination
+====================================
+
+The validity of WindRiver Linux kernel and RootFS combination for this BSP is
+in the table.
+The leftmost column of the table is the kernel type, and the top line is the
+RootFS type.
+'Y' in each content cell stands for the combination is supported; 'N' stands
+for not supported:
+
+--------------------------------------------------------------------
+| kernel/rootfs | glibc-std | glibc-small | glibc-cgl | glibc-tiny |
+--------------------------------------------------------------------
+|   standard    |     Y     |      Y      |     N     |     Y      |
+--------------------------------------------------------------------
+|   preempt-rt  |     Y     |      Y      |     N     |     Y      |
+--------------------------------------------------------------------
+|   cgl         |     N     |      N      |     N     |     N      |
+--------------------------------------------------------------------
+
+Note: with regard to the kernel and RootFS type, please refer to WindRiver Linux
+specification for details.
+
+3. BSP Specific Patches
+=======================
+
+To get a list of patches applied to the kernel specific to this BSP along with
+patch descriptions use git-whatchanged on the default kernel 
+(git-whatchanged <kernel_type>..<bsp_name>). For example:
+
+	%> cd tmp-glibc/work-shared/<bsp_name>/kernel-source
+	%> git whatchanged standard/base..standard/intel-x86
+
+4. Boot Instructions
+====================
+
+4.1 Boot methods
+================
+
+Check your BIOS Setup for boot media configuration options on your specific
+hardware. The CD/DVD drive, SATA hard disk and USB storage device for system
+boot are available on the boards listed in README.hardware. EFI, SAS, PXELINUX
+and Intel RST RAID volume are optional on some targets. Please refer to
+README.hardware for details.
+
+4.1.1 PXELINUX
+--------------
+
+The BIOS on most targets supports booting from NIC via PXE ROM. To enable PXE
+ROM the following setting, taken as an example from Intel Sabino Canyon, can
+be used:
+
+	Boot -> PXE ROM			[Enabled]
+	Boot -> Boot Option #1		[IBA GE Slot 00C8 v1376]
+
+Upon power up, PXE ROM will perform DHCP to acquire a network and server
+address, and load the PXELINUX bootloader from the server via TFTP. PXELINUX
+then loads the kernel image (via TFTP) and boots using PXE-supplied command
+line parameters. If PXE ROM is unavailable on the target, please use gPXE 
+instead.
+
+4.1.2 SATA, USB and SAS
+-----------------------
+
+To boot from SATA, USB and SAS disks, please select the right devices from the
+BIOS "Boot" sub-menu. GRUB must be installed on the boot disk partition.
+Assuming "/dev/sda1" is the boot partition, the following commands can be
+used:
+
+	$ mount /dev/sda1 /mnt/
+	$ grub-install --root-directory=/mnt/ /dev/sda
+	$ vi /mnt/boot/grub/menu.lst
+
+	default        0
+	timeout        6
+
+	title           WRLinux BSP Booting
+	root            (hd0,0)
+	kernel          /boot/bzImage root=/dev/sda1 rw ip=dhcp
+
+In the GRUB configuration file "/mnt/boot/grub/menu.lst", please make sure
+that the 'root' option and the 'kernel' option have the right settings.
+For detailed instructions on installing and booting Wind River Linux
+from a hard disk, please see the User's Guide. Note: In 6.0 and some linux
+distributions, grub2 is used instead of grub. To maintain simplicity and
+compatibility, this document uses the grub style configuration and
+command. At the last step, use grub-menulst2cfg to convert the configuration
+file to the grub2-style:
+
+	$ grub-menulst2cfg /mnt/boot/grub/menu.lst /mnt/boot/grub/grub.cfg
+
+The only thing different from SATA/SAS when booting from a USB device is that 
+you should pass "rootwait" to the kernel, which specifies that the kernel
+will wait for the root device to show up, otherwise the kernel cannot detect 
+the USB storage device when mounting rootfs.
+
+4.1.3 CD/DVD Drive
+------------------
+As with SATA, USB and SAS disks, a CD/DVD Drive can be selected as the boot 
+device in the BIOS "Boot" sub-menu.
+
+4.1.4 EFI
+---------
+
+Modern EFI-based computers require that linux boot using EFI boot mode. 
+The EFI boot method can be selected as the boot device in the BIOS "Boot"
+sub-menu. It is usually indicated by the option "Built-in EFI Shell".
+
+To enable the EFI boot method, for example, use an USB device formated to FAT32
+filesystem as storage, then copy the kernel file to /EFI/wrl/bzImage.efi
+on the USB device. Note that the kernel filename must end in .efi, and kernel 
+file must be stored in its own subdirectory of the /EFI directory on storage. 
+The last step is to create a script named startup.nsh with the following 
+content:
+
+	fs0:\EFI\wrl\bzImage.efi <kernel_parameters>
+
+EFI Shell will automatically execute startup.nsh to load bzImage.efi, and
+the built-in boot loader within bzImage.efi will boot the kernel to pass the
+system control to linux OS.
+
+Please contact the manufacturer to update firmware if the screen hangs
+when startup.sh is invoked.
+
+4.2 Rootfs methods
+==================
+
+The SATA/SAS hard disk, USB storage device, NFS and Intel RST RAID 0 volume are
+enabled in the kernel as potential root filesystem devices.
+Note that only Intel RST RAID 0 volume as rootfs is supported on some
+targets.
+
+4.2.1 SATA/SAS
+--------------
+
+Use SATA hard disk as rootfs with this kernel parameter:
+
+	root=/dev/sd<x><y> rw ip=dhcp
+
+For example:
+
+	root=/dev/sda1 rw ip=dhcp
+
+In the example shown above, the first SATA hard disk detected by linux is
+used as the device having rootfs, and the first partition inside it is used
+as rootfs.
+
+4.2.2 USB
+---------
+
+Use a USB storage device as rootfs with this kernel parameter:
+
+	root=/dev/sd<x><y> rw ip=dhcp rootwait
+
+For example:
+
+	root=/dev/sdc1 rw ip=dhcp rootwait
+
+This is similar to SATA rootfs. "rootwait" tells the kernel to wait for the 
+root device become available before attempting to mount the rootfs. This 
+option is useful for certain targets with slow USB response times.
+
+4.2.3 NFS
+---------
+
+Use NFS as rootfs with this kernel parameter:
+
+	root=/dev/nfs rw nfsroot=<nfs_server_ip>:<path_to_rootfs> ip=dhcp
+
+For example:
+
+	root=/dev/nfs rw nfsroot=192.168.0.1:/export/pxeboot/boards/rootfs ip=dhcp
+
+In the example shown above, an nfs server is located at 192.168.0.1, and the
+exported mount point via nfs makes /export/pxeboot/boards/rootfs available.
+
+4.2.4 initramfs on tiny filesystem
+----------------------------------
+
+Use initramfs as rootfs in EFI boot with the following steps:
+
+       fs0:\> bzImage.efi initrd=./intel-x86-xx-wrlinux-image-glibc-tiny-tiny-dist.cpio.gz
+
+Or if bzImage-initramfs.efi is equal to bzImage + initramfs:
+
+       fs0:\> bzImage-initramfs.efi console=ttyS0,115200
+
+Note:
+  Not all standard kernel config fragments of this BSP are enabled in the 
+  WRLinux tiny kernel and filesystem. You can easily add required fragments as 
+  follows:
+
+       # cd path_to_your_project/build
+       # bitbake -c menuconfig linux-windriver
+       # bitbake linux-windriver
+
+  Or use the following command to re-config busybox:
+       # bitbake -c menuconfig busybox
+
+4.3 Boot from the Live Images
+========================
+
+WRLinux supports the ISO, USB and HDD images boot, and all of those images support both
+legacy PCBIOS and UEFI boot. When use UEFI boot method, these three Live Images are all
+use grub-efi as bootloader.
+
+4.3.1 ISO Image
+----------------
+
+The way to get the ISO image is to add IMAGE_FSTYPES += "iso" to conf/local.con
+"echo 'IMAGE_FSTYPES += "iso"' >> conf/local.conf", and then bitbake rootfs, after that, you can access the ISO image in
+<project_dir>/tmp-glibc/deploy/images/ directory.
+
+After you get the ISO image, you can burn it onto an optical disk or "dd" it onto a flash
+disk to boot on your board just as the USB image does.
+
+4.3.2 HDD Image
+-----------------
+
+To get a HDD image, you must add  "IMAGE_FSTYPES += "hddimg"" to conf/local.conf.
+After that, build rootfs with bitbake, you will get it under tmp-glibc/deploy/images/<bsp name>/  directory,such as:
+tmp-glibc/deploy/images/intel-x86-64/intel-x86-64-wrlinux-image-glibc-std-standard-dist.hddimg.
+
+The method of deploying this image is the same as USB image does.
+
+5. Features
+===========
+
+This section describes common features which are available on most targets.
+
+5.1 iTCO Watchdog
+=================
+
+5.1.1 Introduction
+------------------
+
+The Intel TCO timer-based watchdog device will reboot the machine after its 
+timer expires (30/60 seconds by default).
+
+5.1.2 Usage and verification
+----------------------------
+
+The iTCO Watchdog can be accessed via /dev/watchdog. To reboot the machine,
+write a value to the iTCO Watchdog like this:
+
+	$ echo 1 > /dev/watchdog
+
+To stop the watchdog, run:
+
+	$ echo V > /dev/watchdog
+
+Note:
+The watchdog cannot be stopped once it has been started if
+CONFIG_WATCHDOG_NOWAYOUT is enabled.
+Before use /dev/watchdog, you need disable watchdog.service
+to stop the watchdog daemon to use it to avoid "Device busy" error.
+
+5.1.3 Target Notes
+------------------
+
+1) On some targets, the driver fails to reset the chipset's NO_REBOOT flag,
+which prevents the watchdog from rebooting the machine, and you will see a
+kernel message such as "failed to reset NO_REBOOT flag, reboot disabled by
+hardware". In such cases, iTCO Watchdog is deemed to be unsupported. Please 
+refer to README.hardware for details about the targets affected by this problem.
+2) This BSP supports 3 types of watchdog which all use the same device file. 
+To minimize conflicts among them, the iTCO_wdt, ipmi_watchdog and mei are 
+compiled as modules, but you still need to use "modprobe -r" to unload all 
+watchdog drivers and re-install the driver you desire.
+3) In order to run haswell/broadwell targets under qemu '-enable-kvm' is required.
+$ make start-target EX_TARGET_QEMU_OPTS='-enable-kvm'
+
+5.2 Standby (ACPI S1), Suspend to RAM (ACPI S3) & Suspend to Disk (ACPI S4)
+===========================================================================
+
+5.2.1 Introduction
+------------------
+
+These features allow the system to enter sleep states which reduce power
+consumption.
+
+5.2.2 System requirements
+-------------------------
+
+You must configure your BIOS properly to enable this feature.
+Using Intel Sabino Canyon as an example, apply these setting:
+
+	Advanced -> ACPI Settings
+		Enable Hibernation	[Enabled]
+		ACPI Sleep State	[S3+S1(Suspend to RAM and CPU Stop Clock)]
+		S3 Video Repost		[Disabled]
+
+Note:
+Some targets only have "S1(CPU Stop Clock)" and "S3(Suspend to RAM)" options in
+ACPI Sleep State, which may separately enable the highest ACPI Sleep State the
+system will enter when suspend is enabled. In such cases, please set the ACPI
+Sleep State to "S3(Suspend to RAM)".
+
+5.2.3 Usage and verification
+----------------------------
+
+1) Put the system in the ACPI S1 state until a specified wakeup time.
+
+	$ rtcwake -m standby -s 20
+
+The system will resume its normal state after 20 seconds.
+
+2) Put the system in the ACPI S3 state until a specified wakeup time.
+
+	$ rtcwake -m mem -s 20
+
+The system will resume its normal state after 20 seconds.
+
+3) Set up ACPI S4 as the following steps.
+
+	$ create a swap partition on disk. For example, use /dev/sda2.
+	$ mkswap /dev/sda2
+	$ attach "resume=/dev/sda2" kernel parameter and then reboot.
+	$ swapon /dev/sda2
+	$ rtcwake -m disk -s 120
+
+ACPI S4 requires more time to recover to a normal state. 
+
+Note: If ACPI S3 functionality is enabled, NFS root cannot be used. Only
+disk based roots (sata/sas/raid/etc) are stable when combined with ACPI S3.
+
+5.2.4 Target Notes
+------------------
+
+1) ACPI S1, S3 and S4 may fail on some targets. Please refer to the
+README.hardware for details about the targets affected by this problem.
+2) The screen may be not respond on some targets after resumption. Please
+refer to the README.hardware for details about the targets affected by
+this problem.
+
+5.3 CPU Hot Plug
+================
+
+5.3.1 Introduction
+------------------
+
+This feature allows turning CPUs off and on. CPUs can be controlled through
+/sys/devices/system/cpu.
+
+5.3.2 Usage and verification
+----------------------------
+
+1) Unplug non-bootstrap CPUs from system:
+
+	$ for i in `seq 1 <x>`; do echo 0 > /sys/devices/system/cpu/cpu$i/online; done
+
+where <x> indicates the last logical CPU id in your machine.
+
+2) Check the result to see the status of non-bootstrap CPUs:
+
+	$ for i in `seq 1 <x>`; do cat /sys/devices/system/cpu/cpu$i/online; done
+
+If step 1 successes, the result will return all zeros, indicating that the CPUs
+are removed from system.
+
+3) Replug non-bootstrap CPUs:
+
+	$ for i in `seq 1 <x>`; do echo 1 > /sys/devices/system/cpu/cpu$i/online; done
+
+4) Check the result to see the status of non-bootstrap CPUs again:
+
+	$ for i in `seq 1 <x>`; do cat /sys/devices/system/cpu/cpu$i/online; done
+
+The expected result will return all 1s, indicating that the CPUs are online now.
+
+5.3.3 Target Notes
+------------------
+
+Bootstrap CPU is always numbered with zero and does *NOT* support CPU Hot Plug.
+
+5.4 CPUidle (ACPI C-states)
+===========================
+
+5.4.1 Introduction
+------------------
+
+CPU idle is a generic framework for supporting software-controlled idle
+processor power management. It includes modular cross-platform governors that
+can be swapped during runtime. For the x86 architecture, a generic cpuidle 
+driver called acpi_idle is provided to support ACPI-enabled machines. 
+Furthermore, an intel_idle driver that includes knowledge of native Intel 
+hardware idle features is provided. Note that the acpi_idle driver can be 
+configured at the same time, in order to handle processors that intel_idle 
+does not support.
+
+5.4.2 Usage and verification
+----------------------------
+
+You must use "cpuidle_sysfs_switch" in your kernel parameters, and then
+follow the step below:
+
+	$ cat /sys/devices/system/cpu/cpu0/cpuidle/*/usage
+
+where the each line of results represents the number of times this state was
+entered.
+
+5.5 CPUfreq (Intel P state)
+===========================
+
+5.5.1 Introduction
+------------------
+The intel_pstate driver provides the internal governor that implements
+the scaling driver for Haswell and Broadwell processors. intel_pstate
+replaces the existing acpi pstates drivers, and is the preferred scaling
+driver for these class of systems.
+
+5.5.2 Usage and verification
+------------------------------
+
+1) Check the intel_pstate driver:
+
+	$ cd /sys/devices/system/cpu
+	$ cat cpu0/cpufreq/scaling_driver
+
+"intel_pstate" will be returned.
+
+2) Check with the availability of governor:
+
+	$ cat cpu0/cpufreq/scaling_available_governors 
+
+"powersave" and "performance" will be returned.
+
+3) Degrade all CPUs in the system:
+
+	$ for i in `seq 0 <x>`; do echo powersave > cpu$i/cpufreq/scaling_governor; done
+
+where <x> indicates the last logical CPU id in your system.
+
+4) Check the current frequency:
+
+	$ cat cpu0/cpufreq/cpuinfo_cur_freq
+	699000
+
+In this example the CPU is running at 700MHz after changing the frequency.
+
+5) Get the performance using a tight loop:
+
+	$ time for i in `seq 100000`; do echo a > /dev/null; done
+	real	0m1.968s
+	user	0m0.703s
+	sys	0m1.182s
+
+6) Upgrade all CPUs on the system:
+
+	$ for i in `seq 0 <x>`; do echo performance > cpu$i/cpufreq/scaling_governor; done
+
+7) Check the current frequency again:
+
+	$ cat cpu0/cpufreq/cpuinfo_cur_freq
+	1200000
+
+In this example the CPU is running at 1200MHz after changing the frequency.
+
+8) Get the performance using a tight loop for comparison:
+
+	$ time for i in `seq 100000`; do echo a > /dev/null; done
+	real	0m1.960s
+	user	0m0.642s
+	sys	0m1.224s
+
+5.6 82599 Niantic 10GbE
+=======================
+
+5.6.1 Introduction
+------------------
+
+The 82599 is the second-generation PCIe Gen-2-based 10GE controller from Intel.
+The 82599 delivers enhanced performance by including advanced scalability
+features such as Data Center Bridging (DCB). The 82599 delivers virtualization
+capabilities implementing Single Route I/O virtualization (SR-IOV).
+
+5.6.2 System requirements
+-------------------------
+
+Prepare 2 82599 NICs and set them up on Canoe Pass and a target with a fiber
+connection.
+
+5.6.3 Usage and verification
+----------------------------
+
+1) Activate Virtual Functions by appending "ixgbe.max_vfs=63" to your kernel
+parameters.
+
+2) Set up interfaces on both machines:
+
+	$ ifconfig eth4 192.168.0.1 up
+	# ifconfig eth6 192.168.0.2 up
+
+The commands above set ip address on the 82599 NIC interface on Canoe Pass
+and sets targets to 192.168.0.1 and 192.168.0.2 respectively.
+
+3) Check the link speed:
+
+	$ ethtool eth4 | grep Speed
+	Speed: 10000Mb/s
+
+The output shows that the 82599 NIC interface has a 10GbE link.
+
+4) Set up ip addresses for all virtual interfaces:
+
+	$ for i in `seq 5 67`; do ifconfig eth$i 192.168.0.$i up; done
+
+This command enables the 63 virtual interfaces and assigns each an 
+ip addresses.
+
+5) Ping the 63 virtual interfaces from the other side:
+
+	# for i in `seq 5 67`; do ping 192.168.0.$i -c 2; done
+
+5.6.4 Target Notes
+------------------
+
+1. The exact number of virtual interface supported depends on the capacity of
+SR-IOV and thus differs from machine to machine.
+2. After system design and analysis of requirements and the desired
+performance profile of a board, it may be desirable to script/automate
+the interrupt affinity of the ixgbe driver. As a starting point for
+this type of tuning, the sourceforce ixgbe project has a reference
+script (set_irq_affinity.sh). Note that some other performance metrics
+(latency, power management, etc) may be impacted by tuning the system
+with this script. 
+
+5.7 WIFI
+========
+
+5.7.1 Introduction
+--------------------
+
+This feature uses the iwlwifi driver based on the kernel's mac80211 subsystem to
+support the following Intel wireless modules:
+
+	+ Intel Corporation Wireless 8260
+		(Intel Corporation Dual Band Wireless-AC 8260
+		adapter with Bluetooth)
+
+In order to use this driver, you will need a microcode (uCode) image for it. 
+You can obtain the microcode from:
+
+https://kernel.googlesource.com/pub/scm/linux/kernel/git/firmware/linux-firmware/+/master/iwlwifi-8000C-13.ucode
+(For 8260 wireless modules)
+
+The microcode is typically installed in /lib/firmware.
+
+5.7.2 System requirements
+-------------------------
+
+1) An UPHAM IV FAB 1 add-in PCIe card is necessary to validate the 3 WIFI mini
+PCIe modules listed above. Note this card lacks good anti-jamming capacity.
+2) A configurable AP providing the settings for managed mode with
+plain/WPA/WPA2/WEP support and DHCP enabled.
+3) A portable device with wireless support to test AD-HOC and AP mode.
+
+5.7.3 Usage and verification
+----------------------------
+
+The following steps assume the essid broadcasted by AP is "test".
+
+1) Managed mode
+
+Before running this test, please configure AP to plain mode without any encrypt
+protection.
+
+	$ rfkill list
+	0: phy0: Wireless LAN
+		Soft blocked: yes
+		Hard blocked: no
+	1: hci0: Bluetooth
+		Soft blocked: no
+		Hard blocked: no
+
+	# check if wifi was blocked, if so, run:
+	$ rfkill unblock all
+
+	$ iwconfig  wlan0
+	wlan0     IEEE 802.11  ESSID:off/any  
+	          Mode:Managed  Access Point: Not-Associated   Tx-Power=0 dBm   
+	          Retry short limit:7   RTS thr:off   Fragment thr:off
+		  Encryption key:off
+	          Power Management:on
+	$ ifconfig wlan0 up
+	$ iwlist wlan0 scan |grep test
+	ESSID:"test"
+	
+	$ iw dev wlan0 connect test
+	$ killall dhclient
+	$ ifconfig wlan0 192.168.43.100
+	$ ifconfig wlan0
+	wlan0     Link encap:Ethernet  HWaddr f8:63:3f:20:63:95  
+	          inet addr:192.168.43.100  Bcast:192.168.43.255  Mask:255.255.255.0
+	          inet6 addr: fe80::fa63:3fff:fe20:6395/64 Scope:Link
+	          UP BROADCAST RUNNING MULTICAST DYNAMIC  MTU:1500  Metric:1
+	          RX packets:12 errors:0 dropped:0 overruns:0 frame:0
+	          TX packets:205 errors:0 dropped:0 overruns:0 carrier:0
+	          collisions:0 txqueuelen:1000 
+	          RX bytes:1458 (1.4 KiB)  TX bytes:50558 (49.3 KiB)
+	$ ping 192.168.43.1 -I wlan0
+	PING 192.168.43.1 (192.168.43.1) from 192.168.43.117 wlan0: 56(84) bytes of data.
+	64 bytes from 192.168.43.1: icmp_seq=1 ttl=64 time=3.03 ms
+	64 bytes from 192.168.43.1: icmp_seq=2 ttl=64 time=3.58 ms
+	64 bytes from 192.168.43.1: icmp_seq=3 ttl=64 time=3.08 ms
+	64 bytes from 192.168.43.1: icmp_seq=4 ttl=64 time=2.43 ms
+	64 bytes from 192.168.43.1: icmp_seq=5 ttl=64 time=2.42 ms
+	64 bytes from 192.168.43.1: icmp_seq=6 ttl=64 time=1.84 ms
+
+2) Managed mode with WPA/WPA2
+
+Before running this test, please configure AP to enable WPA/WPA2 protection, and
+set the key to "12345678".
+
+	$ ifconfig wlan0 down
+	$ vi /etc/wpa_supplicant.conf
+
+	ctrl_interface=/var/run/wpa_supplicant
+
+	network={
+		ssid="test"
+		psk="12345678"
+	}
+
+	$ ifconfig wlan0 up
+	$ wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant.conf
+	$ ifconfig wlan0 192.168.43.100
+	$ ping 192.168.43.1 -I wlan0
+	PING 192.168.43.1 (192.168.43.1) from 192.168.43.100 wlan0: 56(84) bytes of data.
+	64 bytes from 192.168.43.1: icmp_seq=1 ttl=64 time=2.61 ms
+	64 bytes from 192.168.43.1: icmp_seq=2 ttl=64 time=3.08 ms
+	64 bytes from 192.168.43.1: icmp_seq=3 ttl=64 time=3.23 ms
+	64 bytes from 192.168.43.1: icmp_seq=4 ttl=64 time=5.31 ms
+	64 bytes from 192.168.43.1: icmp_seq=5 ttl=64 time=2.88 ms
+	64 bytes from 192.168.43.1: icmp_seq=6 ttl=64 time=2.74 ms
+	^C
+	--- 192.168.43.1 ping statistics ---
+	6 packets transmitted, 6 received, 0% packet loss, time 5007ms
+	rtt min/avg/max/mdev = 2.610/3.311/5.313/0.919 ms
+
+	$ pkill wpa_supplicant
+
+3) Managed mode with WEP
+
+Before running this test, please configure AP to enable WEP, and set the key
+to "12345".
+
+	$ ifconfig wlan0 down
+	$ ifconfig wlan0 up
+	$ iwconfig wlan0 key s:12345
+	$ iwconfig wlan0 essid tenda
+	$ ifconfig wlan0 192.168.0.100
+	$ ping 192.168.0.1 -I wlan0
+	PING 192.168.0.1 (192.168.0.1) from 192.168.0.100 wlan0: 56(84) bytes of data.
+	64 bytes from 192.168.0.1: icmp_req=1 ttl=255 time=2.01 ms
+	64 bytes from 192.168.0.1: icmp_req=2 ttl=255 time=4.20 ms
+	64 bytes from 192.168.0.1: icmp_req=3 ttl=255 time=1.99 ms
+	64 bytes from 192.168.0.1: icmp_req=4 ttl=255 time=3.67 ms
+	64 bytes from 192.168.0.1: icmp_req=5 ttl=255 time=3.76 ms
+	64 bytes from 192.168.0.1: icmp_req=6 ttl=255 time=1.92 ms
+	^C
+	--- 192.168.0.1 ping statistics ---
+	6 packets transmitted, 6 received, 0% packet loss, time 5006ms
+	rtt min/avg/max/mdev = 1.925/2.928/4.203/0.968 ms
+
+4) AD-HOC mode
+
+Before running this test, please configure the portable device with the static ip
+address "192.168.1.2" and use the essid "test".
+
+	$ ifconfig wlan0 down
+	$ iwconfig wlan0 mode ad-hoc
+	$ ifconfig wlan0 up
+	$ iwconfig wlan0 essid test
+	$ ifconfig wlan0 192.168.1.1
+	$ ping 192.168.1.2 -I wlan0
+	PING 192.168.1.2 (192.168.1.2) from 192.168.1.1 wlan0: 56(84) bytes of data.
+	64 bytes from 192.168.1.2: icmp_req=1 ttl=255 time=1.97 ms
+	64 bytes from 192.168.1.2: icmp_req=2 ttl=255 time=3.41 ms
+	64 bytes from 192.168.1.2: icmp_req=3 ttl=255 time=4.42 ms
+	64 bytes from 192.168.1.2: icmp_req=4 ttl=255 time=3.28 ms
+	64 bytes from 192.168.1.2: icmp_req=5 ttl=255 time=3.52 ms
+	^C
+	--- 192.168.1.2 ping statistics ---
+	5 packets transmitted, 5 received, 0% packet loss, time 4004ms
+	rtt min/avg/max/mdev = 1.975/3.325/4.426/0.787 ms
+
+5) AP mode
+
+	cat /etc/wpa_supplicant.conf
+	ctrl_interface=/var/run/wpa_supplicant
+
+	network={
+	        ssid="test"
+	        psk="12345678"
+	        scan_ssid=1
+	        proto=RSN
+	        key_mgmt=WPA-PSK
+	        group=CCMP TKIP
+	        pairwise=CCMP TKIP
+	        priority=5
+		mode=2
+	}
+
+
+	$ vi /etc/dhcp/dhcpd.conf
+	#
+	# DHCP Server Configuration file.
+	#   see /usr/share/doc/dhcp*/dhcpd.conf.sample
+	#   see 'man 5 dhcpd.conf'
+	# global options
+	ddns-update-style none;   # Dynamic DNS updates are turned off
+	max-lease-time 172800;   # maximum lease time - 2 days
+	default-lease-time 86400;   # seconds till lease expire - 1 day
+
+	subnet 192.168.0.0 netmask 255.255.255.0 {
+		option routers 192.168.0.1;   # default gateway
+		option domain-name-servers 128.224.160.11;   # IP address of the DNS server
+		option subnet-mask 255.255.255.0;   # netmask assigned to clients
+		range 192.168.0.50 192.168.0.149;   # pool of the addresses to lease
+	host server1 {
+        	hardware ethernet f8:63:3f:20:63:95;   # wlan0 MAC Address
+	        fixed-address 192.168.0.30;
+	        }
+	}
+
+	$ ifconfig wlan0 up
+	$ ifconfig wlan0 192.168.0.30
+	$ dhcpd -cf /etc/dhcp/dhcpd.conf -f wlan0 &
+	$ echo "1" > /proc/sys/net/ipv4/ip_forward
+	$ iptables -t nat -A POSTROUTING -s 192.168.0.0/24 -o eth0 -j MASQUERADE
+	$ route add default gw 128.224.162.1
+
+Then let the portable device scan the wireless network to identify the network 
+with essid "test". To access it, use the key "12345678".
+
+5.7.4 Target Notes
+------------------
+
+The 5300 wireless module does not provide hardware support for AP mode.
+
+
+5.8 SATA (AHCI)
+===============
+
+5.8.1 Introduction
+------------------
+
+The AHCI SATA controllers offers selectable modes of operation: legacy Parallel
+ATA emulation (IDE), standard AHCI mode, and vendor-specific RAID (which
+generally enables AHCI in order to take advantage of its capabilities). This
+BSP supports the later 2 modes.
+
+5.8.2 System requirements
+-------------------------
+
+You must configure the BIOS properly to enable the standard
+AHCI mode. Using Intel Sabino Canyon as an example, follow this path and
+setting:
+
+	Advanced -> PCH-IO Configuration -> SATA Configuration
+		SATA Controller(s)	[Enabled]
+		SATA Mode Selection	[AHCI]
+
+5.8.3 Usage and verification
+----------------------------
+
+1) Use a SATA hard disk as boot device and install rootfs to it.
+2) eSATA supports hot plugging, so the cable can be disconnected and then 
+reconnected at runtime.
+
+5.9 USB xHCI Host and USB 3.0 Storage Device
+============================================
+
+5.9.1 Introduction
+------------------
+
+The eXtensible Host Controller Interface (xHCI) is standard for USB 3.0
+"SuperSpeed" host controller hardware.
+
+5.9.2 System requirements
+-------------------------
+
+An USB 3.0 stroage device is required.
+
+5.9.3 Usage and verification
+----------------------------
+
+1) Use hdparm to benchmark the performance between USB 2.0 and 3.0:
+
+	$ hdparm -tT /dev/sdc /dev/sdd
+
+	/dev/sdc:
+	 Timing cached reads:   11072 MB in  2.00 seconds = 5542.04 MB/sec
+	 Timing buffered disk reads:   28 MB in  3.11 seconds =   9.01 MB/sec
+
+	/dev/sdd:
+	 Timing cached reads:   12274 MB in  2.00 seconds = 6144.48 MB/sec
+	 Timing buffered disk reads:  234 MB in  3.01 seconds =  77.64 MB/sec
+
+Note:
+/dev/sdc is a USB 2.0 storage device attached on USB 2.0 port.
+/dev/sdd is a USB 3.0 storage device attached on USB 3.0 port.
+
+	$ hdparm -tT /dev/sdc /dev/sdd
+
+	/dev/sdc:
+	 Timing cached reads:   11172 MB in  2.00 seconds = 5591.51 MB/sec
+	 Timing buffered disk reads:   28 MB in  3.03 seconds =   9.23 MB/sec
+
+	/dev/sdd:
+	 Timing cached reads:   12110 MB in  2.00 seconds = 6061.86 MB/sec
+	 Timing buffered disk reads:   96 MB in  3.04 seconds =  31.62 MB/sec
+
+Note:
+/dev/sdc is a USB 2.0 storage device attached on USB 3.0 port.
+/dev/sdd is a USB 3.0 storage device attached on USB 2.0 port.
+
+2) Use an USB 3.0 storage device as boot device and install rootfs on it:
+
+
+5.10 Intel HDA
+==============
+
+5.10.1 Introduction
+-------------------
+
+This feature supports Intel "High Definition Audio" (Azalia) and
+compatible devices. The driver enables the HD-audio controller. The
+appropriate codec drivers are necessary to enable Realtek HD-audio codec
+support such as ALC887/888 and HDMI/DisplayPort HD-audio.
+
+5.10.2 System requirements
+--------------------------
+
+You must configure the BIOS properly to enable this feature.
+Using Intel Sabino Canyon as an example, apply these setting:
+
+	Advanced -> PCH-IO Configuration -> Azalia Configuration
+		Azalia				Enabled
+		Azalia Docking Support Enable	[Enabled]
+		Azalia PME Enable		[Enabled]
+		Azalia HDMI codec		[Enabled]
+		Azalia HDMI codec Port B	[Enabled]
+		Azalia HDMI codec Port C	[Enabled]
+		Azalia HDMI codec Port D	[Enabled]
+
+5.10.3 Usage and verification
+-----------------------------
+
+1) List the available playback devices.
+
+	$ aplay -l
+	**** List of PLAYBACK Hardware Devices ****
+	card 0: MID [HDA Intel MID], device 3: HDMI 0 [HDMI 0]
+	  Subdevices: 1/1
+	  Subdevice #0: subdevice #0
+	card 0: MID [HDA Intel MID], device 7: HDMI 1 [HDMI 1]
+	  Subdevices: 1/1
+	  Subdevice #0: subdevice #0
+	card 0: MID [HDA Intel MID], device 8: HDMI 2 [HDMI 2]
+	  Subdevices: 1/1
+	  Subdevice #0: subdevice #0
+	card 1: PCH [HDA Intel PCH], device 0: ALC262 Analog [ALC262 Analog]
+	  Subdevices: 1/1
+	  Subdevice #0: subdevice #0
+	card 1: PCH [HDA Intel PCH], device 1: ALC262 Digital [ALC262 Digital]
+	  Subdevices: 1/1
+	  Subdevice #0: subdevice #0
+
+In this example, the ALC888 audio effect chip is used with the on-board HD Audio 
+Jack.  Three DP/HDMI codec ports are available as well.
+
+2) Set the card control contents:
+
+	$ amixer cset name='Master Playback Switch' 1
+	$ amixer cset name='Master Playback Volume' 80%
+	$ amixer cset name='Headphone Playback Switch' 1
+
+3) Play the audio file via ALC888:
+
+	$ aplay -Dhw:1,0 test.wav
+	Playing WAVE 'test.wav' : Signed 16 bit Little Endian, Rate 44100 Hz, Stereo
+
+This command uses card 0 and device 0 for playback:
+
+4) Play the audio file via DP or HDMI:
+
+	$ aplay -Dhw:0,7 test.wav 
+	Playing WAVE 'test.wav' : Signed 16 bit Little Endian, Rate 44100 Hz, Stereo
+
+This command uses card 0 and device 7 for playback.
+
+Note:
+HDMI and DP do not support record feature. Only Stereo 44100 Hz PCM format is 
+validated.
+
+5.11 SMBus
+==========
+
+5.11.1 Introduction
+-------------------
+
+Intel 801 family of mainboard I2C interfaces.
+
+5.11.2 Usage and verification
+-----------------------------
+
+Check the SMBus device:
+
+	$ modprobe i2c-dev
+	$ i2cdetect -l
+
+5.11.3 Target Notes
+-------------------
+
+On some boards an ACPI resource conflicts with SMBus. By default, the
+functionality of SMBus is disabled. To enable SMBus, please append
+"acpi_enforce_resources=lax" to your kenrel parameters.
+
+5.12 EDAC
+=========
+
+5.12.1 Introduction
+-------------------
+
+EDAC is designed to report errors in the core system. These are low-level
+errors that are reported in the CPU or associated chipset, or other
+subsystems such as memory, cache, TLB, PCI/PCIE, etc..
+
+5.12.2 Usage and verification
+-----------------------------
+
+Run the following commands to verify EDAC support:
+
+	$ modprobe einj param_extension=1
+	$ mount -t debugfs nodev /mnt
+	$ cd /mnt/apei/einj/
+	$ cat available_error_type
+	0x00000002	Processor Uncorrectable non-fatal
+	0x00000008	Memory Correctable
+	0x00000010	Memory Uncorrectable non-fatal
+	0x00000020	Memory Uncorrectable fatal
+	$ echo 0x12345000 > param1
+	$ echo 0xfffffffffffff000 > param2
+	$ echo 0x8 > error_type
+	$ echo 1 > error_inject
+	$ edac-util --report=ce
+        CE: 1
+
+Note:
+1. param_extension=1 may not be required on some machines, such as Hanlan
+Creek.
+
+5.12.3 Target Notes
+-------------------
+
+Please see Documentation/edac.txt for more details.
+
+5.13 NFC
+========
+
+5.13.1 Target Notes
+-------------------
+
+There is a related README about NFC for references in the following directory:
+
+  path_to_WRLinux_product/layers/wr-kernel/templates/feature/nfc
+
+5.14 Bluetooth
+==============
+
+Bluetooth Keyboard: 6C:5D:63:00:93:F8
+
+5.14.1 Usage and verification
+-----------------------------
+
+    # systemctl start bluetooth
+    # rfkill unblock bluetooth
+    # bluetoothctl
+    [bluetooth]# agent KeyboardDisplay
+    [bluetooth]# default-agent
+    [bluetooth]# scan on
+    [bluetooth]# pair 6C:5D:63:00:93:F8
+    [bluetooth]# connect 6C:5D:63:00:93:F8
+    [bluetooth]# info 6C:5D:63:00:93:F8
+    [bluetooth]# discoverable on
+    [bluetooth]# exit
+
+5.15 kexec/kdump
+================
+
+5.15.1 Introduction
+-------------------
+
+kexec is a system call that implements the ability to shutdown your current
+kernel (so-called system kernel) and start another kernel (so-called dump-
+capture kernel). kdump features a generation of crash dump after being started
+by kexec.
+
+5.15.2 Usage and verification
+-----------------------------
+
+To add kexec/kdump kernel features and the tools to rootfs, use the following options 
+to the setup.sh command :
+
+        --templates feature/kexec feature/kdump
+
+when boot the target, it is necessary to append "crashkernel=Y@X" parameter with
+proper value to specify the load address of dump-capture kernel. Please refer to 
+Documentation/kdump/kdump.txt to know how to set "crashkernel=Y@X" parameter properly.
+
+A dump-capture kernel should be prepared as well. Enabling kdump should be
+normally only set in special dump-capture kernel which are loaded in the system
+kernel with kexec-tools into a specially reserved region and then later
+executed after a crash by kdump/kexec.
+
+When system kernel starts up, use the following command to load a dump-capture
+kernel, and ensure using bzImage as dump-capture kernel:
+
+        $ kexec -p <path_to_dump_capture_kernel> --append="<kernel_parameters>"
+
+Then, issue a kernel crash:
+
+        $ echo c > /proc/sysrq-trigger
+
+After dump-capture kernel starts up, run makedumpfile to dump kernel core file
+for analysis.
+
+5.16 Intel-IOMMU
+================
+
+When the intel-iommu is enabled, the integrated graphics driver shows
+a black screen or is unable to display full screen. To resolve this
+issue, the integrated graphics engine can be disabled by passing
+intel_iommu=igfx_off on the  kernel command line.
+
+5.17 Intel_rapl
+===============
+The RAPL driver is implemented as a power cap driver.
+
+Show intel_rapl status via sysfs:
+
+	$ cat /sys/class/powercap/intel-rapl:0/name
+	package-0
+	$ cat /sys/class/powercap/intel-rapl/intel-rapl\:0/enabled
+	1
+	$ cat /sys/class/powercap/intel-rapl/intel-rapl\:0/constraint_*
+	15000000
+	long_term
+	15000000
+	28000000
+	0
+	short_term
+	25000000
+	2441
+
+5.18 RAM limits on 32-bit kernel
+================================
+
+The 32-bit kernel supports a maximum of 16GB of main memory,
+if a system is running RAM larger than 16GB, append "mem=16G" in kernel
+parameters.
+
+32-bit kernel boot hang without this parameter on the board that has
+more than 16GB memory.
+Booting error log:
+Call Trace:
+  [<c108920e>] ? __wake_up_common+0xe/0x70
+  [<c1071edb>] ? preempt_count_sub+0xb/0xc0
+  [<c1a05878>] ? _raw_spin_unlock_irqrestore+0x18/0x30
+  [<c10892af>] ? __wake_up+0x3f/0x50
+  [<c10649b8>] queue_work_on+0x18/0x30
+  [<c14977e5>] credit_entropy_bits+0x1d5/0x320
+  [<c1498e77>] add_interrupt_randomness+0x147/0x1a0
+  [<c10a203b>] handle_irq_event_percpu+0x15b/0x1e0
+  [<c10721ac>] ? preempt_count_add+0xc/0xd0
+  [<c10721ac>] ? preempt_count_add+0xc/0xd0
+  [<c1071edb>] ? preempt_count_sub+0xb/0xc0
+  [<c10a20f1>] handle_irq_event+0x31/0x50
+  [<c10a4970>] ? handle_simple_irq+0x90/0x90
+  [<c10a49f4>] handle_level_irq+0x84/0xf0
+  [<c1004943>] handle_irq+0x73/0x90
+
+
+6. Creating Partitioned Images(WIC)
+==================================
+
+User can use the OpenEmbedded Image Creator, wic, to create the properly
+partitioned image on a SD card, flash, or a HDD. The wic command
+generates partitioned images from existing OpenEmbedded build artifacts.
+User can refer to the below URL to get more WIC details:
+
+http://www.yoctoproject.org/docs/2.4/mega-manual/mega-manual.html#creating-partitioned-images-using-wic
+
+This BSP supports EFI and legacy PCBIOS disk images for USB, HDD and SD card.
+The default wic image is an EFI disk image for USB and HDD.
+After build the project, user will get a WIC image under the directory
+tmp-glibc/deploy/images/<bsp name>/ ,such as:
+
+tmp-glibc/deploy/images/intel-x86-64/wrlinux-image-glibc-small-intel-x86-64.wic.
+
+Then user can write the output image to an USB or Hard disk:
+
+$ sudo dd if=wrlinux-image-glibc-small-intel-x86-64.wic of=/dev/your_usb_dev
+
+If user needs the image to support legacy PCBIOS or SD card boot, please use
+the wic script to create it:
+
+$ wic list images
+	mkefidisk		Create an EFI disk image
+	directdisk-gpt		Create a 'pcbios' direct disk image
+	mkefidisk-sd		Create an EFI disk image (SD card)
+	sdimage-bootpart	Create SD card image with a boot partition
+	...
+
+Assuming user wants to boot the 'wrlinux-image-glibc-small' image for USB/HDD:
+
+$ wic create directdisk-gpt -e wrlinux-image-glibc-small
+
+If successful, the wic script generates the image and prints its location:
+
+       Info: The new image(s) can be found here:
+         /var/tmp/wic/build/directdisk-gpt-201701090746-sda.direct
+
+Similarly, write the image to the target via dd.

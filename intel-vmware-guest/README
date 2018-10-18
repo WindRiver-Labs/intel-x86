@@ -1,0 +1,151 @@
+
+               Intel Vmware Guest BSP
+
+1. About this document
+======================
+
+This BSP is optimized for the guest running on top of Vmware ESXI5.5/6.0
+hypervisor.
+This BSP uses kernel and package architecture in the intel-x86 layer.
+
+This document describes the dedicated contents for optimized features
+and specific information.
+
+Please refer to README of intel-x86 for common intel-x86 information.
+
+Dependencies
+------------
+This layer depends on the oe-core version supplied with Wind River
+Linux, the wr-kernel and intel-x86 bsp layer.
+
+Maintenance
+-----------
+This layer is maintained by Wind River Systems, Inc.
+Contact <support@windriver.com> or your support representative for more
+information on submitting changes.
+
+Building the intel-vmware-guest layer
+------------------------------------
+To build a 64-bit kernel + 64-bit rootfs, use:
+
+    --enable-board=intel-vmware-guest-64
+
+To build a 32-bit kernel + 32-bit rootfs combination, use
+the following configuration:
+
+    --enable-board=intel-vmware-guest-32
+
+To build hddimg and ISO images, please append the following:
+
+    --enable-bootimage=hdd,iso
+
+ESXi virtual machine creation
+----------------------------
+This BSP is supposed to run as a guest on top of ESXi hypervisor. When using
+Vmware vSphere client to create the virtual machine, please select "Typical"
+configuration for common devices, and pick up "Other Linux(64-bit)" or "Other
+Linux(32-bit)" version in Linux template for WR Linux8 vmware guest OS.
+
+Rootfs deployment and boot options
+----------------------------------
+There are several alternatives to deploy the root file system:
+
+1.ISO
+Click "Edit Settings" of corresponding virtual machine in vSphere client,
+select CD/DVD drive, make sure "Connect at power on" is checked, and load your
+ISO in "Datastore ISO File" filed.
+
+You can start the virtual machine from CD/DVD drive, then open the console to
+access the virtual machine.
+
+Note, using ISO image, the root file system is read-only.
+
+2.HDD
+When virtual machine is created, you can find the <vm-name>-flat.vmdk file.
+Copy this file to a Linux host, and deploy the hddimg on the vmdk file as the
+following steps:
+
+    # losetup /dev/loop0 <vm-name>-flat.vmdk
+    # dd if=<target>.hddimg of=/dev/loop0
+    # losetup -d /dev/loop0
+
+Copy the vmdk file back to replace the previous one, then the virtual machine
+could boot from "Hard disk".
+
+3.PXE
+WR Linux 8 guest could also boot via PXE. Select PXE boot as the following steps:
+
+    1) Power off the virtual machine
+    2) Click "Edit Settings" in vSphere client, switch to "Options" tab
+    3) In Advanced->Boot Options filed, check "Force BIOS Setup"
+    4) Power on the virtual machine, and open the console, the guest will enter BIOS
+    5) In BIOS's boot tab, move "Network boot" to the top one
+
+VMXNET3 device enablement
+-------------------------
+If the virtual machine is created with "Other Linux" version, VMXNET3 is not
+able to be selected for the network adapter type, as Vmware doesn't certify
+those "Other Linux", but VMXNET3 is working with WR Linux8 guest, and you can
+change the network adapter type from "E1000" to "VMXNET3" via editing virtual
+machine's vmx file:
+
+    ethernetN.virtualDev = "vmxnet3"
+
+where N is the device number.
+
+DPDK support
+------------
+DPDK is working with VMXNET3 adapter, adding the following configuration line
+to enable DPDK.
+
+    --with-layer=wr-dpdk
+
+Run DPDK test over VMXNET3 in vSphere client with the following steps:
+
+    1) Create a new virtual switch used for DPDK test only
+    2) Poweroff the virtual machine
+    3) Add 2 new VMXNET3 adapters to virtual machine for DPDK test
+    4) Connect the two VMXNET3 adapters to the new virtual switch
+    5) Refer to layers/wr-dpdk/templates/default/README to start DPDK test
+
+
+License
+-------
+Copyright (C) 2016 Wind River Systems, Inc.
+
+Source code included in the tree for individual recipes is under the LICENSE
+stated in the associated recipe (.bb file) unless otherwise stated.
+
+The metadata is under the following license unless otherwise stated.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+
+2. BSP Specific Patches
+=======================
+
+To get a list of patches applied to the kernel specific to this BSP along with
+patch descriptions use git-whatchanged on the default kernel
+(git-whatchanged <kernel_type>..<bsp_name>). For example:
+
+        %> cd build/linux-windriver-<version>/linux
+        %> git whatchanged standard/base..standard/intel-x86-64
+
+Note:
+intel-vmware-guest uses the same branch as intel-x86 common bsp.
