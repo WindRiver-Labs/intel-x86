@@ -76,3 +76,6 @@ IMAGE_FSTYPES += "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', '', 'liv
 WKS_FILE ?= "mkefidisk.wks"
 do_image_wic[depends] += "gptfdisk-native:do_populate_sysroot"
 do_image_wic[recrdeptask] += "do_bootimg"
+
+# DPDK enable and configuration
+COMPATIBLE_MACHINE_intel-x86_pn-dpdk = "${MACHINE}"
