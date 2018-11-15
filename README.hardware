@@ -12,6 +12,7 @@ Table of Contents
 
 This BSP supports the following boards:
 
+	+ Intel Bakerville platform: Intel Skylake-D Processor, Skylake-D PCH,(Yuba City)
 	+ Intel Harcuvar platform: Atom Pocessor, Denverton-NS SoC, (Harcuvar)
 	+ Intel NUC Platform: Broadwell-U processor, Broadwell PCH (WildcatPoint-LP), (NUC5i3MYBE)
 
@@ -19,6 +20,7 @@ This BSP supports the following boards:
 2. Change History
 =================
 
+	- 2018/11 (US119087) Add Bakerville support
 	- 2018/09 (US116940) Add NUC5i3MYBE support
 	- 2018/08 (US115507) Update Harcuvar for LTS-18 and cleanup README.
 	          Remove support for Bakerville, Purley 4S and Intel NUC7i5BNH.
@@ -221,3 +223,89 @@ Before we fix it, provide the following method to avoid it.
 Workaround:
    Add "intel_idle.max_cstate=[0,1,2]" to kernel boot parameter.
 
+3.3 Intel Bakerville(Yuba City)
+-------------------------------
+
+Intel Bakerville platform: Intel Skylake-D Processor, Skylake-D PCH, (Yuba City)
+
+3.3.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may possibly have some issues.
+
+[Board info]
+	Vendor: Intel Corporation
+	Platform: Bakerville
+
+[BIOS info]
+	Bios Version: BKVDCRB1.86B.0004.D13.1708090634
+
+[Processor info]
+	Codename: Skylake-D
+	Core: 14
+	Stepping: 2
+
+[Chipset info]
+	Codename: Integrated Skylake-D PCH
+
+
+3.3.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported on boards where
+the corresponding h/w features exist.
+
+	o General Platform
+		+ perf: H/W based PMU
+
+	o Bus
+		+ PCI/PCI-Express
+		+ I2C/SMBus:
+			+ Intel i801 family I2C/SMBus controller
+
+	o Network
+		+ Intel E1000E Gigabit Ethernet:
+			+ Intel Corporation Ethernet Connection I219-LM connection
+		+ Intel 40G Ethernet PCIe cards (enabled by i40e driver)
+			+ Intel Corporation Ethernet Connection X722 for 10GbE SFP+
+
+	o USB
+		+ USB Host:
+			+ USB 3.0 XHCI controller
+
+	o Storage
+		+ SATA: AHCI SATA controller
+
+	o Power Management
+		+ CPU Freq: ACPI P-state
+		+ CPU Idle: ACPI C-state
+
+	o Misc Devices
+		+ UART: 8250/16550A compatible serial port
+		+ RTC: PC-style CMOS RTC
+		+ Input device
+			+ USB mouse & keyboard
+		+ HW Monitor: Intel CPU core temperature sensor
+
+3.3.3 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated:
+
+	x Watchdog: Intel iTCO H/W Watchdog timer
+	x Suspend to Memory (ACPI S3)
+
+3.3.4 Known Issues
+~~~~~~~~~~~~~~~~~~
+
+1) There are error messages when either in boot or the X722 NiC receive any packets:
+{1}[Hardware Error]: Hardware error from APEI Generic Hardware Error Source: 0
+{1}[Hardware Error]: It has been corrected by h/w and requires no further action
+
+And x722 NIC works at a low speed. One can workaround this problem by changing BIOS settings as below:
+
+Disable "Correct Error" in BIOS as following path:
+EDKII-> Platform Configuration-> System Event Log-> PCIe Error Enabling
+
+This change eliminates the error log and restores the expected high-speed network throughput.
