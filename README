@@ -18,8 +18,8 @@ Please refer to README.hardware for hardware specific information.
 
 Dependencies
 ------------
-This layer depends on the oe-core version supplied with linux-yocto
-kernel.
+This layer depends on the oe-core version supplied with Wind River Linux
+and the wrlinux layer.
 
 Maintenance
 -----------
