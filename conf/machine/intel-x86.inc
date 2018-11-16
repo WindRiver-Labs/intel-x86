@@ -19,6 +19,11 @@ MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-i915"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-ibt-12-16"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-rtl8723"
 
+EFI_PROVIDER ?= "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'systemd-boot', 'grub-efi', d)}"
+
+# grub-efi is depended in wic.bbclass, remove it to aviod depency error.
+WKS_FILE_DEPENDS_BOOTLOADERS_remove = "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'grub-efi', '', d)}"
+
 KERNEL_IMAGETYPE = "bzImage"
 
 SERIAL_CONSOLES = "115200;ttyS0 115200;ttyUSB0"
@@ -69,10 +74,9 @@ TARGET_QEMU_BOOT_CONSOLE="ttyS0,115200"
 TARGET_QEMU_OPTS="-show-cursor -usb -usbdevice wacom-tablet -vga vmware"
 TARGET_QEMU_CPU="Nehalem"
 
-# avoid grub-efi problems when limited to GPLv2
-IMAGE_FSTYPES += "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', '', 'live wic wic.bmap', d)}"
+IMAGE_FSTYPES += "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'wic wic.bmap', 'live wic wic.bmap', d)}"
 
-WKS_FILE ?= "mkefidisk.wks"
+WKS_FILE ?= "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'systemd-bootdisk.wks', 'mkefidisk.wks', d)}"
 do_image_wic[depends] += "gptfdisk-native:do_populate_sysroot"
 do_image_wic[recrdeptask] += "do_bootimg"
 
