@@ -24,6 +24,10 @@ EFI_PROVIDER ?= "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'systemd-
 # grub-efi is depended in wic.bbclass, remove it to aviod depency error.
 WKS_FILE_DEPENDS_BOOTLOADERS_remove = "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'grub-efi', '', d)}"
 
+# Do not include installer routine when GPLv3 is not allowed.
+INITRAMFS_SCRIPTS_remove = "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'initramfs-module-install initramfs-module-install-efi', '', d)}"
+LABELS_LIVE_remove = "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'install', '', d)}"
+
 KERNEL_IMAGETYPE = "bzImage"
 
 SERIAL_CONSOLES = "115200;ttyS0 115200;ttyUSB0"
@@ -74,7 +78,7 @@ TARGET_QEMU_BOOT_CONSOLE="ttyS0,115200"
 TARGET_QEMU_OPTS="-show-cursor -usb -usbdevice wacom-tablet -vga vmware"
 TARGET_QEMU_CPU="Nehalem"
 
-IMAGE_FSTYPES += "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'wic wic.bmap', 'live wic wic.bmap', d)}"
+IMAGE_FSTYPES += "live wic wic.bmap"
 
 WKS_FILE ?= "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'systemd-bootdisk.wks', 'mkefidisk.wks', d)}"
 do_image_wic[depends] += "gptfdisk-native:do_populate_sysroot"
