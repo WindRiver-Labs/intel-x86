@@ -4,7 +4,8 @@ require conf/machine/include/tune-skylake.inc
 
 TUNEVALID[skylake-avx512] = "Enable Skylake specific processor optimizations with AVX512 instructions supported"
 
-TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "skylake-avx512", " -march=skylake-avx512 -mtune=skylake-avx512 -mfpmath=sse", "", d)}"
+TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "skylake-avx512", " -msse4.2 -mfpmath=sse -march=skylake-avx512 -mtune=skylake-avx512", "", d)}"
+EXTRA_OECONF_append_pn-gcc-runtime = " ${@bb.utils.contains("TUNE_FEATURES", "skylake-avx512", " --with-cpu=skylake-avx512 --with-arch=skylake-avx512", "", d)}"
 
 AVAILTUNES += "skylake-avx512-32 skylake-avx512-64"
 

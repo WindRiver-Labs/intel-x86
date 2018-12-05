@@ -9,7 +9,8 @@ TUNEVALID[skylake] = "Enable Skylake specific processor optimizations"
 # things could in theory check TUNE_FEATURES for it.
 TUNEVALID[mpx] = "Enable support for MPX instructions"
 # Handled by SDK.
-TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "skylake", " -march=skylake -mtune=skylake -mfpmath=sse", "", d)}"
+TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "skylake", " -msse4.2 -mfpmath=sse -march=skylake -mtune=skylake", "", d)}"
+EXTRA_OECONF_append_pn-gcc-runtime = " ${@bb.utils.contains("TUNE_FEATURES", "skylake", " --with-cpu=skylake --with-arch=skylake", "", d)}"
 
 # Extra tune selections
 AVAILTUNES += "skylake-32 skylake-64"
