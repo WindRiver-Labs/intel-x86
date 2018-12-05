@@ -6,7 +6,8 @@ require conf/machine/include/tune-corei7.inc
 TUNEVALID[haswell] = "Enable Haswell specific processor optimizations"
 TUNEVALID[haswell-ep] = "Enable Haswell specific processor optimizations (with working TSX instructions)"
 # Handled by SDK.
-TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "haswell", " -march=haswell -mtune=haswell -mfpmath=sse", "", d)}"
+TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "haswell", " -msse4.2 -mfpmath=sse -march=haswell -mtune=haswell", "", d)}"
+EXTRA_OECONF_append_pn-gcc-runtime = " ${@bb.utils.contains("TUNE_FEATURES", "haswell", " --with-cpu=haswell --with-arch=haswell", "", d)}"
 
 # Extra tune selections
 AVAILTUNES += "haswell-32 haswell-64"
