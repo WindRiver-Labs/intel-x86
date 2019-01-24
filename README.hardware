@@ -309,3 +309,100 @@ Disable "Correct Error" in BIOS as following path:
 EDKII-> Platform Configuration-> System Event Log-> PCIe Error Enabling
 
 This change eliminates the error log and restores the expected high-speed network throughput.
+
+3.4 Intel Whiskey Lake H(Cannon Point PCH)
+------------------------------------------
+
+Intel Whiskey Lake board featuring Intel Porcessor code named Whiskey Lake U,
+with supoort of wifi, bluetooth, NVMe SSD and eDP.
+
+3.4.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may possibly have some issues.
+
+    [Board info]
+    Vendor: Intel Corporation
+    Platform: Intel Whiskey Lake U42
+    SoC Codename: Whiskey Lake
+
+    [BIOS info]
+    BIOS Version: CNLSFWR1.R00.X141.B01.1804120214
+
+    [Processor info]
+    Codename: Whiskey Lake
+    Brand: Genuine Intel(R) CPU 0000 @ 1.80GHz
+    Core: 8
+    ID: 0x806EB
+    Stepping: W0
+    Microcode Rev: 0x00000084
+
+    [Chipset info]
+    Codename: Cannon Lake
+
+3.4.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported on boards where
+the corresponding h/w features exist.
+
+  o General Platform
+	+ perf: H/W based PMU
+
+  o Bus
+	+ PCI/PCI-Express
+	+ I2C/SMBus:
+		+ Intel Corporation SMBus controller
+
+  o Network
+	+ Intel E1000E Gigabit Ethernet:
+		+ Intel Corporation Ethernet Connection I219-V Ethernet controller
+	+ WIFI:
+		+ Intel Corporation Wireless 9560NGW (Intel Corporation Dual Band Wireless-AC 9560NGW adapter with Bluetooth)
+
+  o USB
+	+ USB Host:
+		+ USB 2.0 EHCI controller
+		+ USB 3.0 XHCI controller
+		+ USB 3.1 XHCI controller
+
+  o Storage
+	+ SATA: SATA: AHCI SATA controller
+	+ NVMe: PCI Express based Solid-State Drives (SATA M.2 SSDs)
+	+ MMC: Secure Digital Host Controller Interface driver Copyright(c) Pierre Ossman
+
+  o Multimedia
+	+ Graphics:
+		+ Intel Corporation I915 Integrated Graphics Controller
+		+ Two DP DisplayPort
+		+ One eDP DisplayPort
+        + Audio:
+		+ Intel HD Audio via the HDMI DisplayPort
+
+  o Misc Devices
+	+ Input device:
+		+ USB mouse & keyboard
+	+ Watchdog: Intel WDAT hardware watchdog
+
+3.4.3 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated:
+
+	x EDAC
+	x USB Type-C Port
+	x Realtek HD Audio via a stereo headphone 3.5mm jack
+	x Touch Screen
+
+3.4.4 Note
+~~~~~~~~~~
+1) Watchdog: by default WDAT was disabled by bios, to use it:
+Change "Intel Advanced Menu -> PCH-IO Configuration -> Enable TCO timer" to "enabled" to enable it.
+
+3.4.5 Known Issues
+~~~~~~~~~~~~~~~~~~
+1) USB3.1 hotplug failed on this version of bios.
+
+2) DP (DisplayPort) hotplug malfunction:
+The DP hotplug would not work if the board boots with the DP connector unplugged.
