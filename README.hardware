@@ -22,6 +22,7 @@ This BSP supports the following boards:
 2. Change History
 =================
 
+	- 2019/04 (F11720) Add Intel Virtual RAID on CPU(VROC) support
 	- 2019/04 (F11706) Add Intel Ice Lake U support
 	- 2019/04 (US127334) Add Intel Whiskey Lake U support
 	- 2019/04 (US127335) Add Intel Cascade Lake 4S support

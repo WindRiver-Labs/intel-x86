@@ -1145,6 +1145,186 @@ Call Trace:
   [<c10a49f4>] handle_level_irq+0x84/0xf0
   [<c1004943>] handle_irq+0x73/0x90
 
+5.19 Intel Virtual RAID on CPU
+==============================
+
+5.19.1 Introduction
+-------------------
+
+Intel Virtual RAID on CPU(Intel VROC) is an enterprise,
+hybrid RAID solution, specifically designed for NVMe* SSDs
+connected directly to the CPU. Intel VORC is supported by
+Intel VMD(Volume Management Device) it enhances the 48
+preexisting PCIe* lanes for dependable NVMe connections.
+
+5.19.2 System requirements
+-------------------------
+
+Intel VROC is enabled on Intel Xeon Scalable Processor,
+Gen1 or Gen2(i.e. Skylake or Cascade Lake).
+
+VMD should be enabled in BIOS, also a Intel VROC RAID upgrade key
+is necessary.
+
+1. Enable it in bios:
+	Advanced
+	   --> PCI configuration
+		--> Volume Management Device
+		   --> CPU0 Oculink Volume Management device
+
+Then we can see Intel Virtual RAID on CPU in following path:
+	Advanced
+	   --> PCI configuration
+		--> UEFI Option ROM Control
+		   --> Intel Virtual RAID on CPU
+
+Then we can create RAID Volume under this option.
+
+5.19.3 Usage and verification
+-----------------------------
+
+Here take RAID1 for example, after boot into system, we can see RAID device
+named like /dev/md126, it is a RAID disk we can use it as an normal disk
+
+1). use as a normal hard disk
+
+create partition:
+
+# fdisk /dev/md126
+	Device            Start        End    Sectors  Size Type
+/dev/md126p1       2048    2000895    1998848  976M EFI System
+/dev/md126p2    2000896 1855824218 1853823323  884G Linux filesystem
+/dev/md126p3 1855824219 1953497054   97672836 46.6G Linux swap
+
+# mkfs.vfat /dev/md126p1
+# mkfs.ext4 /dev/md126p2
+
+# mount /dev/md126p2 /mnt/
+# dd if=/dev/zero of=/mnt/test bs=1M count=1000
+
+2) use as a lvm
+
+a) create PV:
+
+   # pvcreate /dev/md126p2
+   # pvdisplay
+  "/dev/md126p2" is a new physical volume of "883.97 GiB"
+  --- NEW Physical volume ---
+  PV Name               /dev/md126p2
+  VG Name
+  PV Size               883.97 GiB
+  Allocatable           NO
+  PE Size               0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               CwcGdL-OFcc-gGYv-dOSW-e61p-HrkH-kdcRp5
+b) create vg named wrl
+
+   # vgcreate wrl /dev/md126p2
+   # vgdisplay
+  --- Volume group ---
+  VG Name               wrl
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  1
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                0
+  Open LV               0
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               883.97 GiB
+  PE Size               4.00 MiB
+  Total PE              226296
+  Alloc PE / Size       0 / 0
+  Free  PE / Size       226296 / 883.97 GiB
+  VG UUID               aELEni-W3v9-Np2N-m1Mc-ixhd-H9Hv-yT3Fyv
+
+c) create 10G LV named home
+   # lvcreate -L 10G -n home wrl
+   # lvdisplay
+  --- Logical volume ---
+  LV Path                /dev/wrl/home
+  LV Name                home
+  VG Name                wrl
+  LV UUID                ZMxbfh-k5hx-qfSV-jCoO-ctLy-rVFJ-WKU7fx
+  LV Write Access        read/write
+  LV Creation host, time intel-x86-64, 2019-01-09 02:39:14 +0000
+  LV Status              available
+  # open                 0
+  LV Size                10.00 GiB
+  Current LE             2560
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     256
+  Block device           253:0
+
+   # fdisk -l
+   Disk /dev/mapper/wrl-home: 10 GiB, 10737418240 bytes, 20971520 sectors
+   Units: sectors of 1 * 512 = 512 bytes
+   Sector size (logical/physical): 512 bytes / 512 bytes
+   I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+   # mkfs.ext4 /dev/mapper/wrl-home
+   # mount /dev/mapper/wrl-home /mnt/
+   # dd if=/dev/zero of=/mnt/test bs=1M count=10000
+
+
+3). deploy image to raid disk and boot it
+
+a) deploy rootfs directly to raid disk
+	# dd if=wrlinux-image-glibc-std-intel-x86-64.hddimg of=/dev/md126p2
+
+b) use usb install disk to deploy it
+
+create a usb install disk with hddimg
+
+	# dd if=wrlinux-image-glibc-std-intel-x86-64.hddimg of=/dev/sda
+
+insert to machine with raid, then boot and choose "install graphics console"
+Durning install, we can choose where to install the system: raid disk directly
+and LVM.
+
+c) deploy OS manually
+
+boot with the usb disk in step b, after boot into system, create boot partition
+and rootfs partition manually, named /dev/md126p1 /dev/md126p2
+
+	# fdisk /dev/md126
+	# mkfs.vfat /dev/md126p1
+	# mkfs.ext4 /dev/md126p2
+
+copy install disk's EFI to /dev/md126p1
+	# mount /dev/sda /mnt
+	# mount /dev/md126p1 /home
+	# cp /mnt/EFI /home -rf
+	# cp /mnt/initrd /home
+	umount /home /mnt
+
+unzip rootfs manually to rootfs partition /dev/md126p2 or LVM partition
+
+	# mount /dev/md126p2 /mnt
+	# tar xvf wrlinux-image-glibc-std-intel-x86-64.tar.bz2 -C /mnt
+	or
+	# mount /dev/mapper/wrl-home /mnt
+	# tar xvf wrlinux-image-glibc-std-intel-x86-64.tar.bz2 -C /mnt
+
+we have four choices to specify rootfs in command line:
+
+linux /vmlinuz LABEL=boot root=UUID=5d24d87d-1fe8-4618-ac3b-fd464e7553c9
+linux /vmlinuz LABEL=boot root=PARTUUID=xxxx
+linux /vmlinuz LABEL=boot root=/dev/mapper/wrl-home
+linux /vmlinuz LABEL=boot root=/dev/ram0
+
+Notes:
+rootfs can deployed into raid disk and lvm, but boot partition must
+be raid disk since UEFI only can recognize vfat partition.
+
 
 6. Creating Partitioned Images(WIC)
 ==================================
