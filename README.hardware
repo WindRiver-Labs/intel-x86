@@ -16,10 +16,12 @@ This BSP supports the following boards:
 	+ Intel Harcuvar platform: Atom Pocessor, Denverton-NS SoC, (Harcuvar)
 	+ Intel NUC Platform: Broadwell-U processor, Broadwell PCH (WildcatPoint-LP), (NUC5i3MYBE)
 	+ Intel Purley 4-Socket Server Refresh: Intel Cascade Lake Processor
+	+ Intel Whiskey Lake: Whiskey Lake U Processor, Cannon Lake PCH (Whiskey Lake U)
 
 2. Change History
 =================
 
+	- 2019/04 (US127334) Add Intel Whiskey Lake U support
 	- 2019/04 (US127335) Add Intel Cascade Lake 4S support
 	- 2018/11 (US119087) Add Bakerville support
 	- 2018/09 (US116940) Add NUC5i3MYBE support
