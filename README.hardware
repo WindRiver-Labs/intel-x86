@@ -15,11 +15,12 @@ This BSP supports the following boards:
 	+ Intel Bakerville platform: Intel Skylake-D Processor, Skylake-D PCH,(Yuba City)
 	+ Intel Harcuvar platform: Atom Pocessor, Denverton-NS SoC, (Harcuvar)
 	+ Intel NUC Platform: Broadwell-U processor, Broadwell PCH (WildcatPoint-LP), (NUC5i3MYBE)
-
+	+ Intel Purley 4-Socket Server Refresh: Intel Cascade Lake Processor
 
 2. Change History
 =================
 
+	- 2019/04 (US127335) Add Intel Cascade Lake 4S support
 	- 2018/11 (US119087) Add Bakerville support
 	- 2018/09 (US116940) Add NUC5i3MYBE support
 	- 2018/08 (US115507) Update Harcuvar for LTS-18 and cleanup README.
@@ -406,3 +407,86 @@ Change "Intel Advanced Menu -> PCH-IO Configuration -> Enable TCO timer" to "ena
 
 2) DP (DisplayPort) hotplug malfunction:
 The DP hotplug would not work if the board boots with the DP connector unplugged.
+
+3.5 Intel Purley 4-Socket Server Refresh(Cascade Lake)
+------------------------------------------------------
+
+Intel Purley 4S Server Refresh is a 4U rackmount server with Cascade Lake CPUs,
+Lewisburg chipset, and Lightning Ridge baseboard installed.
+
+3.5.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may have some issues.
+
+[BIOS info]
+	Vendor: Intel Corporation
+	Version: PLYXCRB1.86B.0564.D09.1812120307
+	Release Date: 12/12/2018
+
+[Processor info]
+	Codename: Intel Cascade Lake B0
+	vendor_id: GenuineIntel
+	cpu family: 6
+	model: 85
+	model name: Intel(R) Xeon(R) Platinum 8260L CPU @ 2.40GHz
+	stepping: 6
+	microcode: 0x4000013
+
+3.5.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+	o General Platform
+		+ perf: H/W based PMU
+
+	o Bus
+		+ PCI/PCI-Express/Mini-PCI-Express
+		+ SMBus
+
+	o Network
+		+ Gb Ethernet:Intel Corporation I210 Gigabit Network Connection
+		+ QSFP+: Intel Corporation Ethernet Connection X722
+
+	o USB
+		+ USB 3.0 Host: xHCI controller
+
+	o Storage
+		+ NVMe
+		+ SATA3
+
+	o Multimedia
+		+ Graphics: Matrox Electronics Systems Ltd. MGA G200e
+
+	o Power Management
+		+ CPU Freq: ACPI P-state
+		+ CPU Idle: ACPI C-state
+
+	o Misc Devices
+		+ RTC: PC-style CMOS RTC
+		+ Input device
+			+ USB mouse & keyboard
+		+ HW Monitor: Intel CPU core temperature sensor
+
+	o TPM2.0
+
+	o Intel Optane DC Persistent Memory Module (Code name: Apache Pass)
+
+3.5.3 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated:
+
+	x Hardware Watchdog
+	x Suspend to memory(S3)
+
+3.5.4 Notes
+~~~~~~~~~~~
+
+To support Intel Optane DC Persistent Memory Module(Intel Optane DCPMM), you must read
+templates/feature/intel-persistent-memory/README first.
+
+3.5.5 Knonw Issues
+~~~~~~~~~~~~~~~~~~
+
+When using Intel Optane DCPMM as App Direct Mode, suspend to disk(S4) doesn't work.
