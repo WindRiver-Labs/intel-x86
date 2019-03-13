@@ -69,7 +69,7 @@ PREFERRED_VERSION_virtual/mesa = "17.1.5"
 PREFERRED_VERSION_grub-efi ?= "2.02"
 
 PREFERRED_PROVIDER_virtual/kernel ??= "linux-yocto"
-PREFERRED_VERSION_linux-yocto ?= "4.19%"
+PREFERRED_VERSION_linux-yocto ?= "5.0%"
 
 TARGET_QEMU_BIN = "qemu-system-x86_64"
 TARGET_QEMU_KERNEL="bzImage"
