@@ -27,19 +27,12 @@ SERIAL_CONSOLES = "115200;ttyS0 115200;ttyUSB0"
 
 MACHINEOVERRIDES_append = ":intel-x86"
 
-# xserver-common, xserver-nodm-init
-VIRTUAL-RUNTIME_xserver_common ?= "xserver-nodm-init"
-
-# xserver-nodm-init, anaconda-init
-VIRTUAL-RUNTIME_graphical_init_manager ?= "xserver-nodm-init"
-
 XSERVER ?= "xserver-xorg \
 	   xserver-xorg-extension-dri \
 	   xserver-xorg-extension-dri2 \
 	   xserver-xorg-extension-extmod \
 	   xserver-xorg-extension-dbe \
 	   xserver-xorg-module-libint10 \
-	   ${VIRTUAL-RUNTIME_graphical_init_manager} \
 	   xf86-input-mouse \
 	   xf86-input-keyboard \
 	   xf86-input-evdev \
@@ -53,7 +46,6 @@ XSERVER ?= "xserver-xorg \
 	   ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'mesa-driver-i915 mesa-driver-i965', '', d)} \
 	   ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'mesa mesa-demos', '', d)} \
 	   ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'xf86-video-ati xf86-video-intel', '', d)} \
-	   ${VIRTUAL-RUNTIME_xserver_common} \
 	   matchbox-wm"
 
 PREFERRED_PROVIDER_libglu = "libglu"
