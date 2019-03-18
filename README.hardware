@@ -488,7 +488,16 @@ The following features are not supported or validated:
 To support Intel Optane DC Persistent Memory Module(Intel Optane DCPMM), you must read
 templates/feature/intel-persistent-memory/README first.
 
-3.5.5 Knonw Issues
+3.5.5 Known Issues
 ~~~~~~~~~~~~~~~~~~
 
-When using Intel Optane DCPMM as App Direct Mode, suspend to disk(S4) doesn't work.
+1) When using Intel Optane DCPMM as App Direct Mode, suspend to disk(S4) doesn't work.
+
+2) In kernel booting log, you may see "pmd_set_huge: Cannot satisfy [mem 0x80000000-
+0x80200000] with a huge-page mapping due to MTRR override.".
+This message is a harmless warning. It just shows that the I/O remapping code can't set
+up huge page mapping due to MTRR override and it will fall back to use a smaller page
+size toward 4KB when a mapping range is covered by non-WB type of MTRRs.
+
+You may add "nohugeiomap" to kernel boot command line to disable I/O huge page mapping,
+or remove MTRR support in kernel if it is not needed.
