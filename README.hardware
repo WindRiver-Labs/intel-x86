@@ -17,10 +17,12 @@ This BSP supports the following boards:
 	+ Intel NUC Platform: Broadwell-U processor, Broadwell PCH (WildcatPoint-LP), (NUC5i3MYBE)
 	+ Intel Purley 4-Socket Server Refresh: Intel Cascade Lake Processor
 	+ Intel Whiskey Lake: Whiskey Lake U Processor, Cannon Lake PCH (Whiskey Lake U)
+	+ Intel Ice Lake U platform: Ice Lake U42 Processor
 
 2. Change History
 =================
 
+	- 2019/04 (F11706) Add Intel Ice Lake U support
 	- 2019/04 (US127334) Add Intel Whiskey Lake U support
 	- 2019/04 (US127335) Add Intel Cascade Lake 4S support
 	- 2018/11 (US119087) Add Bakerville support
@@ -501,3 +503,95 @@ size toward 4KB when a mapping range is covered by non-WB type of MTRRs.
 
 You may add "nohugeiomap" to kernel boot command line to disable I/O huge page mapping,
 or remove MTRR support in kernel if it is not needed.
+
+3.6 Intel Ice Lake U
+--------------------
+
+Intel Ice Lake board featuring Intel Porcessor code named IceLake U42,
+with supoort of wifi, bluetooth, NVMe SSD and eDP.
+
+3.6.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may possibly have some issues.
+
+[Board info]
+	Board Name: IceLake U DDR4 SODIMM PD RVP TLC
+	Board ID: 0x12
+	LAN PHY Revision: A6 (B2 Stepping)
+	SoC Codename: ICL-U CPU (4+2)
+
+[BIOS info]
+	BIOS Vendor: Intel  Corporation
+	Core Version: 1.5.2.0 RP01
+	Client Silicon Version: 0.2.0.15
+	Project Version: ICLSFWR1.R00.2422.A01.1810162254
+	Build Date: 22:54 10/16/2018
+[Processor info]
+	Codename: IceLake ULT
+	vendor_id: GenuineIntel
+	cpu family: 6
+	model: 126
+	model name: Genuine Intel(R) CPU 0000 @ 1.30GHz
+	stepping: 2
+	microcode: 0x28
+
+3.6.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported on boards where
+the corresponding h/w features exist.
+
+	o Bus
+		+ PCI/PCI-Express
+		+ I2C/SMBus:
+			+ Intel Corporation SMBus controller
+
+	o Network
+		+Intel E1000E Gigabit Ethernet:
+			+ Intel Corporation Ethernet Connection I219-V Ethernet controller
+
+	o USB
+		+ USB Host:
+			+ USB 2.0 EHCI controller
+			+ USB 3.0 XHCI controller
+
+	o Storage
+		+ SATA: AHCI SATA controller
+		+ NVMe: PCI Express based Solid-State Drives (SATA M.2 SSDs)
+
+	o Multimedia
+		+ Graphics: EFI VGA frame buffer driver
+			+ One eDP DisplayPort
+		+ Intel HD Audio:
+			+ Intel HD Audio the HDMI DisplayPort
+			+ Realtek HD Audio Analog headphone 3.5mm jack
+
+	o Misc Devices
+		+ UART: 8250/16550A compatible serial port
+		+ Input device:
+			+ USB mouse & keyboard
+		+ Watchdog: Intel WDAT hardware watchdog
+
+3.6.3 Note
+~~~~~~~~~~
+
+1) Watchdog: By default WDAT was disabled by bios, to use it:
+Change "Intel Advanced Menu -> PCH-IO Configuration -> Enable TCO timer" to
+"enabled" to enable it.
+
+2) You have to add the "nomodeset" parameter in the kernel command line since
+the DRM is not supported on this board. Otherwise the board would fail to boot.
+
+3.6.4 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated:
+
+      x EDAC
+      x DisplayPort: DP and HDMI DisplayPort
+      x Touch Screen
+      x WIFI and Bluetooth (Intel Wireless@22560NGW)
+      x USB 3.1 XHCI controller
+      x USB Type-C Port
