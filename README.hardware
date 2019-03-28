@@ -18,10 +18,12 @@ This BSP supports the following boards:
 	+ Intel Purley 4-Socket Server Refresh: Intel Cascade Lake Processor
 	+ Intel Hewitt Lake: Intel Xeon D-1600 series Processors
 	+ Intel Cooper Lake: Intel Xeon Scalable Processors
+	+ Intel Ice Lake U platform: Ice Lake U42 Processor
 
 2. Change History
 =================
 
+	- 2020/07 (LINUXPG-457) Add Intel Ice Lake-U support
 	- 2020/06 (LINUXPG-444) Add Cooper Lake support
 	- 2020/04 (LINUXPG-361) Add Hewitt Lake-D support
 	- 2019/07 (LINUXPG-98) Add Intel Cascade Lake 4S support
@@ -594,3 +596,103 @@ The following features are not supported or validated.
 ~~~~~~~~~~
 
 For kernel kdump feature, it is recommended to use "crashkernel=512M".
+
+3.7 Intel Ice Lake U
+--------------------
+
+Intel Ice Lake board featuring Intel Porcessor code named IceLake U42,
+with supoort of wifi, bluetooth, NVMe SSD and eDP.
+
+3.7.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may possibly have some issues.
+
+[Board info]
+	Board Name: IceLake U DDR4 SODIMM PD RVP TLC
+	Board ID: 0x12
+	LAN PHY Revision: A6 (B2 Stepping)
+	SoC Codename: ICL-U CPU (4+2)
+
+[BIOS info]
+	BIOS Vendor: Intel  Corporation
+	Core Version: 1.5.2.0 RP01
+	Client Silicon Version: 0.2.0.15
+	Project Version: ICLSFWR1.R00.3162.A00.1904162000
+	Build Date: 20:00 04/16/2019
+[Processor info]
+	Codename: IceLake ULT
+	cpu family: 6
+	model: 126
+	model name: Intel(R) Core(TM) i7-1065G7 CPU @ 1.30GHz
+	stepping: 2
+	microcode: 0x28
+
+3.7.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported on boards where
+the corresponding h/w features exist.
+
+	o Bus
+		+ I2C/SMBus:
+			+ Intel Corporation Ice Lake-LP SMBus Controller (i2c_i801)[8086:34a3] (rev 30)
+
+	o Network
+		+Intel E1000E Gigabit Ethernet:
+			+ Intel Corporation Ethernet Connection (9) I219-V [8086:15e2] (e1000e)(rev 10)
+
+	o USB
+		+ USB 3.0 XHCI controller
+			+ Intel Corporation Ice Lake-LP USB 3.1 xHCI Host Controller (xhci_hcd)[8086:34ed] (rev 10)
+				+ 2 x Type-A port
+				+ One Type-C port
+	
+	o Storage
+		+ SATA:
+			+ Intel Corporation Ice Lake-LP SATA Controller [AHCI mode] [8086:34d3] (rev 10)
+		+ SSD:
+			+ Non-Volatile memory controller: Intel Corporation SSD Pro 7600p/760p/E 6100p Series [8086:f1a6] (rev 03)
+
+	o Multimedia
+		+ Graphics: VGA compatible controller: Intel Corporation Device(i915) [8086:8a52](rev 07)
+			+ Internal Display: One eDP DisplayPort
+			+ External Display: One HDMI DisplayPort
+		+ Intel HD Audio:
+			+ Realtek HD Audio Analog headphone 3.5mm jack+
+			+ Intel HD Audio the HDMI DisplayPort
+
+	o Wireless
+		+ Wifi: Intel Wireless@AX201NGW
+			+ Network controller: Intel Corporation Device (iwlwifi)[8086:34f0] (rev 30)
+		+ Bluetooth: Intel Wireless@AX201NGW
+			+ Driver btusb
+
+	o Power Management
+		+ CPU Freq: ACPI P-state
+		+ CPU Idle: ACPI C-state
+		+ Suspend to RAM: ACPI S3
+
+	o Misc Devices
+		+ UART: 8250/16550A compatible serial port
+		+ Input device:
+			+ USB mouse & keyboard
+		+ Watchdog: Intel WDAT hardware watchdog
+
+3.7.3 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated:
+
+      x EDAC
+      x DisplayPort: one External DP port
+      x Touch Screen
+      x Thunderbolt 3
+
+3.7.4 Note
+~~~~~~~~~~
+
+1) Watchdog: By default WDAT was disabled by bios, to use it:
+Change "Intel Advanced Menu -> PCH-IO Configuration -> Enable TCO timer" to
+"enabled" to enable it.
