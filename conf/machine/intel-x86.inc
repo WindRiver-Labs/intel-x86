@@ -73,3 +73,5 @@ do_image_wic[recrdeptask] += "do_bootimg"
 
 # DPDK enable and configuration
 COMPATIBLE_MACHINE_intel-x86_pn-dpdk = "${MACHINE}"
+
+require ${@bb.utils.contains('DISTRO_FEATURES', 'wic-installer', 'conf/machine/include/wic-installer.inc', '', d)}

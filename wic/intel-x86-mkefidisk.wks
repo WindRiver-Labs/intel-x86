@@ -1,0 +1,9 @@
+# short-description: Create an EFI disk image for intel x86
+# long-description: Creates a partitioned EFI disk image that the user
+# can directly dd to boot media.
+
+part /boot --source bootimg-partition --sourceparams="loader=grub-efi" --ondisk sda --label msdos --active --align 1024 --use-label
+
+part / --source rootfs --ondisk sda --fstype=ext4 --label platform --align 1024 --use-label
+
+bootloader --ptable gpt
