@@ -14,11 +14,13 @@ This BSP supports the following boards:
 
 	+ Intel Harcuvar platform: Atom Pocessor, Denverton-NS SoC, (Harcuvar)
 	+ Intel NUC Platform: Broadwell-U processor, Broadwell PCH (WildcatPoint-LP), (NUC5i3MYBE)
+	+ Intel NUC Platform: KabyLake-U Processor, Sunrise Point-LP PCH, (NUC7i5DNK1E)
 
 
 2. Change History
 =================
 
+	- 2019/04 (US131896) Add NUC7i5DNK1E support
 	- 2018/09 (US116940) Add NUC5i3MYBE support
 	- 2018/08 (US115507) Update Harcuvar for LTS-18 and cleanup README.
 	          Remove support for Bakerville, Purley 4S and Intel NUC7i5BNH.
@@ -199,7 +201,7 @@ the corresponding h/w features exist.
 	o Misc Devices
 		+ UART: 8250/16550A compatible serial port(internal 9pin header)
 		+ RTC: PC-style CMOS RTC
-		+ Input deivce
+		+ Input device
 			+ USB mouse & keyboard
 		+ Watchdog: Intel iTCO H/W Watchdog timer
 		+ HW Monitor: Intel CPU core temperature sensor
@@ -221,3 +223,97 @@ Before we fix it, provide the following method to avoid it.
 Workaround:
    Add "intel_idle.max_cstate=[0,1,2]" to kernel boot parameter.
 
+3.3 Intel NUC7i5DNK1E
+----------------------
+
+NUC7i5DNK1E board built with a 7th generation Intel CoreTM i5 processor
+code name KabyLake U, wifi and onboard ethernet support,  with Intel
+Corporation HD Graphics 620.
+
+3.3.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may possibly have some issues.
+
+[Board info]
+	Vendor: Intel Corporation
+	Platform: NUC7i5DNK1E
+
+[BIOS info]
+	Bios Version: DNKBLi5v.86A.0026.2017.0915.2016 09/15/2017
+
+[Processor info]
+	Codename: KabyLake-U
+	Brand: Intel(R) Core(TM) i5-7300U CPU @ 2.60GHz
+	Core: 4
+	ID: 0x806e9
+	Stepping: 9h
+
+[Chipset info]
+	Codename: Sunrise Point-LP
+
+3.3.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported on boards where
+the corresponding h/w features exist.
+
+	o Bus
+		+ PCI-Express
+			+ PCIe x4: M.2 22x80 (key M) slot PCIe x1: M.2 22x30 (key E) slot
+		+ I2C/SMBus:
+			+ Intel Corporation Sunrise Point-LP SMBus
+
+	o Network
+		+ Intel E1000E Gigabit Ethernet:
+			+ Onboard I219-LM GbE
+		+ WIFI:
+			Intel Corporation Wireless 8265/8275 (Intel Corporation Dual Band Wireless-AC 8265 adapter with Bluetooth)
+
+	o USB
+		+ USB 3.0 XHCI controller
+
+	o Storage
+		+ SATA: AHCI SATA controller
+		+ M.2 SSD card
+
+	o Multimedia
+		+ Intel HD Audio:
+			+ HDMI Audio
+		+ Graphics:
+			+ Intel Corporation HD Graphics 620 VGA controller
+
+	o Power Management
+		+ Suspend to RAM: ACPI S3
+		+ Suspend to DISK: ACPI S4
+		+ CPU Freq: ACPI P-state
+		+ CPU Idle: ACPI C-state
+
+	o Misc Devices
+		+ RTC: PC-style CMOS RTC
+		+ Input device
+			+ USB mouse & keyboard
+		+ Watchdog: ACPI WDAT Watchdog timer
+		+ HW Monitor: Intel CPU core temperature sensor
+		+ Trusted Platform Module
+
+3.3.3 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated:
+	x eDP connector
+	x NFC header
+	x High Speed Custom Solutions connector
+	x internal 9pin UART header
+
+3.3.4 Known Issues
+~~~~~~~~~~~~~~~~~~
+1) boot error: thermal thermal_zone3: failed to read out thermal zone
+   It is the known upstream issue, reported in upstream:
+   https://bugzilla.kernel.org/show_bug.cgi?id=201761
+   will trace its new status.
+
+2) boot error: [drm] failed to retrieve link info, disabling eDP
+   No screen connect to eDP will cause the above error, mark it
+   as un-validated feature.
