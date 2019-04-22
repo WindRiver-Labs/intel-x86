@@ -1300,11 +1300,14 @@ and rootfs partition manually, named /dev/md126p1 /dev/md126p2
 	# mkfs.ext4 /dev/md126p2
 
 copy install disk's EFI to /dev/md126p1
+
 	# mount /dev/sda /mnt
 	# mount /dev/md126p1 /home
 	# cp /mnt/EFI /home -rf
 	# cp /mnt/initrd /home
-	umount /home /mnt
+	# cp /mnt/vmlinuz /home
+	# cp /mnt/startup.nsh /home
+	# umount /home /mnt
 
 unzip rootfs manually to rootfs partition /dev/md126p2 or LVM partition
 
@@ -1314,7 +1317,7 @@ unzip rootfs manually to rootfs partition /dev/md126p2 or LVM partition
 	# mount /dev/mapper/wrl-home /mnt
 	# tar xvf wrlinux-image-glibc-std-intel-x86-64.tar.bz2 -C /mnt
 
-we have four choices to specify rootfs in command line:
+we have four choices to specify rootfs in grub.cfg
 
 linux /vmlinuz LABEL=boot root=UUID=5d24d87d-1fe8-4618-ac3b-fd464e7553c9
 linux /vmlinuz LABEL=boot root=PARTUUID=xxxx
