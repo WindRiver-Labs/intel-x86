@@ -1187,3 +1187,10 @@ If successful, the wic script generates the image and prints its location:
          /var/tmp/wic/build/directdisk-gpt-201701090746-sda.direct
 
 Similarly, write the image to the target via dd.
+
+
+7. TPM2
+========
+To add TPM2 tools to rootfs, add the following template when run setup.sh
+
+	--template feature/tpm2
