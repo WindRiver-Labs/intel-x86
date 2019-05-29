@@ -251,7 +251,7 @@ Or if bzImage-initramfs.efi is equal to bzImage + initramfs:
        fs0:\> bzImage-initramfs.efi console=ttyS0,115200
 
 Note:
-  Not all standard kernel config fragments of this BSP are enabled in the 
+  1) Not all standard kernel config fragments of this BSP are enabled in the 
   WRLinux tiny kernel and filesystem. You can easily add required fragments as 
   follows:
 
@@ -261,6 +261,12 @@ Note:
 
   Or use the following command to re-config busybox:
        # bitbake -c menuconfig busybox
+
+  2) bzImage.efi is renamed from images/intel-x86-64/bzImage-intel-x86-64.bin
+     bzImage-initramfs.efi is renamed from images/intel-x86-64/bzImage-initramfs-intel-x86-64.bin
+     both of them are same file only with different file name, because some versions
+     of EFI only can recognize file with .efi suffix.
+
 
 4.3 Boot from the Live Images
 ========================
