@@ -19,10 +19,12 @@ This BSP supports the following boards:
 	+ Intel Whiskey Lake: Whiskey Lake U Processor, Cannon Lake PCH (Whiskey Lake U)
 	+ Intel Ice Lake U platform: Ice Lake U42 Processor
 	+ Intel Ice Lake Y platform: Ice Lake Y42 Processor
+	+ Intel Apollo Lake platform: Intel apollolake-i SoC (Oxbow Hill)
 
 2. Change History
 =================
 
+	- 2019/07 (LINUXPG-149) Add Apollo Lake support
 	- 2019/04 (F11706) Add Intel Ice Lake Y support
 	- 2019/04 (F11720) Add Intel Virtual RAID on CPU(VROC) support
 	- 2019/04 (F11706) Add Intel Ice Lake U support
@@ -689,3 +691,81 @@ The following features are not supported or validated:
       x WIFI and Bluetooth (Intel Wireless@22560NGW)
       x USB 3.1 XHCI controller
       x USB Type-C Port
+
+3.8 Intel Apollo Lake
+---------------------
+
+Intel Oxbow Hill is a hardware reference platform and software
+development kit for those interested in creating Apollo Lake solutions.
+
+3.8.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may possibly have some issues.
+
+        [Board info]
+        Vendor: Intel Corporation
+
+        [BIOS info]
+        Version: APLIRVPA.X64.0138.B35.1608091058
+        Release Date: 08/09/2016
+
+        [Processor info]
+        Codename: intel apollolake-i
+        Brand: Intel(R) Atom(TM) CPU @ 1.6GHZ
+        Core: 4
+        Stepping: 8
+
+3.8.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported on boards where
+the corresponding h/w features exist.
+
+  o General Platform
+	+ perf: H/W based PMU
+
+  o Bus
+	+ PCI/PCI-Express
+	+ I2C/SMBus:
+		+ Intel i801 family I2C/SMBus controller
+
+  o Network
+	+ Intel 1Gb Ethernet:
+		+ Intel Corporation I210 Gigabit Network Connection
+
+  o USB
+	+ USB 3.0 XHCI controller
+	+ USB 3.0 OTG dual-role port
+		+ One USB OTG
+
+  o Storage
+	+ SATA: AHCI SATA controller
+	+ eMMC/SDIO/SD card: Secure Digital Host Controller
+
+  o Multimedia
+	+ Graphics:
+		+ Intel Corporation I915 Integrated Graphics Controller. GPU device ID [8086:5a84]
+
+  o Power Management
+	+ CPU Freq: ACPI P-state
+	+ CPU Idle: ACPI C-state
+
+  o Misc Devices
+	+ UART: 8250/16550A compatible serial port
+	+ RTC: PC-style CMOS RTC
+	+ Input device
+		+ USB mouse & keyboard
+	+ Watchdog: Intel iTCO H/W Watchdog timer
+	+ HW Monitor: Intel CPU core temperature sensor
+
+3.8.3 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated:
+
+	x IPU
+	x Intel HD Audio
+	x PWM
+	x SPI
