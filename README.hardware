@@ -16,11 +16,13 @@ This BSP supports the following boards:
 	+ Intel NUC Platform: Broadwell-U processor, Broadwell PCH (WildcatPoint-LP), (NUC5i3MYBE)
 	+ Intel NUC Platform: KabyLake-U Processor, Sunrise Point-LP PCH, (NUC7i5DNK1E)
 	+ Intel Coffee Lake-S: CoffeeLake Processor, Cannon Point PCH (Coffee Lake S)
+	+ Intel Purley 4-Socket Server Refresh: Intel Cascade Lake Processor
 
 
 2. Change History
 =================
 
++	- 2019/07 (LINUXPG-98) Add Intel Cascade Lake 4S support
 	- 2019/06 (LINUXPG-76) [CD][BSP] Intel X86 - Core (Coffee Lake S)
 	- 2019/04 (US131896) Add NUC7i5DNK1E support
 	- 2018/09 (US116940) Add NUC5i3MYBE support
@@ -416,3 +418,92 @@ Others refer to section 3.3.4 Know Issues.
 1) Watchdog: by default WDAT was disabled by bios, to use it:
    Change "Intel Advanced Menu -> PCH-IO Configuration -> Enable TCO timer" to "enabled"
    to enable it.
+
+
+3.5 Intel Purley 4-Socket Server Refresh(Cascade Lake)
+------------------------------------------------------
+
+Intel Purley 4S Server Refresh is a 4U rackmount server with Cascade Lake CPUs,
+Lewisburg chipset, and Lightning Ridge baseboard installed.
+
+3.5.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may have some issues.
+
+[BIOS info]
+	Vendor: Intel Corporation
+	Version: PLYXCRB1.86B.0564.D09.1812120307
+	Release Date: 12/12/2018
+
+[Processor info]
+	Codename: Intel Cascade Lake B0
+	vendor_id: GenuineIntel
+	cpu family: 6
+	model: 85
+	model name: Intel(R) Xeon(R) Platinum 8260L CPU @ 2.40GHz
+	stepping: 6
+	microcode: 0x4000013
+
+3.5.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+	o General Platform
+		+ perf: H/W based PMU
+
+	o Bus
+		+ PCI/PCI-Express/Mini-PCI-Express
+		+ SMBus
+
+	o Network
+		+ Gb Ethernet:Intel Corporation I210 Gigabit Network Connection
+		+ QSFP+: Intel Corporation Ethernet Connection X722 (i40e)
+
+	o USB
+		+ USB 3.0 Host: xHCI controller
+
+	o Storage
+		+ NVMe
+		+ SATA3
+
+	o Multimedia
+		+ Graphics: Matrox Electronics Systems Ltd. MGA G200e (PCI id: 0x0522)
+
+	o Power Management
+		+ CPU Freq: ACPI P-state
+		+ CPU Idle: ACPI C-state
+
+	o Misc Devices
+		+ RTC: PC-style CMOS RTC
+		+ Input device
+			+ USB mouse & keyboard
+		+ HW Monitor: Intel CPU core temperature sensor
+
+	o TPM2.0
+
+
+3.5.3 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated:
+
+	x Hardware Watchdog
+	x Suspend to memory(S3)
+	x C62x Chipset QuickAssist Technology
+
+3.5.4 Notes
+~~~~~~~~~~~
+
+
+3.5.5 Known Issues
+~~~~~~~~~~~~~~~~~~
+
+1) In kernel booting log, you may see "pmd_set_huge: Cannot satisfy [mem 0x80000000-
+0x80200000] with a huge-page mapping due to MTRR override.".
+This message is a harmless warning. It just shows that the I/O remapping code can't set
+up huge page mapping due to MTRR override and it will fall back to use a smaller page
+size toward 4KB when a mapping range is covered by non-WB type of MTRRs.
+
+You may add "nohugeiomap" to kernel boot command line to disable I/O huge page mapping,
+or remove MTRR support in kernel if it is not needed.
