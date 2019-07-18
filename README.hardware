@@ -13,7 +13,6 @@ Table of Contents
 This BSP supports the following boards:
 
 	+ Intel Harcuvar platform: Atom Pocessor, Denverton-NS SoC, (Harcuvar)
-	+ Intel NUC Platform: Broadwell-U processor, Broadwell PCH (WildcatPoint-LP), (NUC5i3MYBE)
 	+ Intel NUC Platform: KabyLake-U Processor, Sunrise Point-LP PCH, (NUC7i5DNK1E)
 	+ Intel Coffee Lake-S: CoffeeLake Processor, Cannon Point PCH (Coffee Lake S)
 	+ Intel Purley 4-Socket Server Refresh: Intel Cascade Lake Processor
@@ -22,7 +21,7 @@ This BSP supports the following boards:
 2. Change History
 =================
 
-+	- 2019/07 (LINUXPG-98) Add Intel Cascade Lake 4S support
+	- 2019/07 (LINUXPG-98) Add Intel Cascade Lake 4S support
 	- 2019/06 (LINUXPG-76) [CD][BSP] Intel X86 - Core (Coffee Lake S)
 	- 2019/04 (US131896) Add NUC7i5DNK1E support
 	- 2018/09 (US116940) Add NUC5i3MYBE support
@@ -132,109 +131,15 @@ Add "video=efifb:off" to kernel cmdline to kill this error.
 2) After waking up from S4, serial port console doesn't work.
 Add "no_console_suspend" to kernel cmdline as a workaround.
 
-3.2 Intel NUC5i3MYBE
---------------------
 
-NUC5i3MYBE board built with a 5th generation Intel CoreTM i3 processor
-code name Broadwell-U, wifi and onboard ethernet support,  with Intel
-HD Graphics 5500.
-
-3.2.1 Validated Board Info
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This BSP is only validated in following environment. If you use this BSP
-in a different environment it may possibly have some issues.
-
-[Board info]
-	Vendor: Intel Corporation
-	Platform: NUC5i3MYBE
-
-[BIOS info]
-	Bios Version: MYBDWi30.86A.0017.2014.1127.1854
-
-[Processor info]
-	Codename: Broadwell-U
-	Brand: Intel(R) Core(TM) i3-5010U CPU @ 2.10GHZ
-	Core: 4
-	ID: 0x306D4
-	Stepping: 4h
-
-[Chipset info]
-	Codename: WildcatPoint-LP
-
-3.2.2 Supported Features
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following BSP features are validated and supported on boards where
-the corresponding h/w features exist.
-
-	o General Platform
-		+ perf: H/W based PMU
-
-	o Bus
-		+ PCI/PCI-Express
-		+ I2C/SMBus:
-			+ Intel i801 family I2C/SMBus controller
-
-	o Network
-		+ Intel E1000E Gigabit Ethernet:
-			+ Onboard I218-V GbE
-		+ WIFI:
-			Intel Corporation Wireless 7260 (Intel Corporation Dual Band Wireless-AC 7260 adapter with Bluetooth)
-
-	o USB
-		+ USB 3.0 XHCI controller
-
-	o Storage
-		+ SATA: AHCI SATA controller
-		+ SSD card
-
-	o Multimedia
-		+ Intel HD Audio:
-			+ Mini DisplayPort HD Audio
-			+ Analog Audio Jack
-		+ Graphics:
-			+ Intel Corporation Broadwell-U Integrated Graphics
-
-	o Power Management
-		+ Suspend to RAM: ACPI S3
-		+ Suspend to DISK: ACPI S4
-		+ CPU Freq: ACPI P-state
-		+ CPU Idle: ACPI C-state
-
-	o Misc Devices
-		+ UART: 8250/16550A compatible serial port(internal 9pin header)
-		+ RTC: PC-style CMOS RTC
-		+ Input device
-			+ USB mouse & keyboard
-		+ Watchdog: Intel iTCO H/W Watchdog timer
-		+ HW Monitor: Intel CPU core temperature sensor
-		+ Trusted Platform Module
-
-3.2.3 Unsupported Features
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following features are not supported or validated:
-	x eDP connector
-	x NFC header
-	x High Speed Custom Solutions connector
-
-3.2.4 Known Issues
-~~~~~~~~~~~~~~~~~~
-
-Board will hang when run glxgears 2D/3D test, Upstream also exist the issue.
-Before we fix it, provide the following method to avoid it.
-Workaround:
-   Add "intel_idle.max_cstate=[0,1,2]" to kernel boot parameter.
-
-3.3 Intel NUC7i5DNK1E
+3.2 Intel NUC7i5DNK1E
 ----------------------
 
 NUC7i5DNK1E board built with a 7th generation Intel CoreTM i5 processor
 code name KabyLake U, wifi and onboard ethernet support,  with Intel
 Corporation HD Graphics 620.
 
-3.3.1 Validated Board Info
+3.2.1 Validated Board Info
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This BSP is only validated in following environment. If you use this BSP
@@ -257,7 +162,7 @@ in a different environment it may possibly have some issues.
 [Chipset info]
 	Codename: Sunrise Point-LP
 
-3.3.2 Supported Features
+3.2.2 Supported Features
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following BSP features are validated and supported on boards where
@@ -302,7 +207,7 @@ the corresponding h/w features exist.
 		+ HW Monitor: Intel CPU core temperature sensor
 		+ Trusted Platform Module
 
-3.3.3 Unsupported Features
+3.2.3 Unsupported Features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following features are not supported or validated:
@@ -311,7 +216,7 @@ The following features are not supported or validated:
 	x High Speed Custom Solutions connector
 	x internal 9pin UART header
 
-3.3.4 Known Issues
+3.2.4 Known Issues
 ~~~~~~~~~~~~~~~~~~
 1) boot error: thermal thermal_zone3: failed to read out thermal zone
    It is the known upstream issue, reported in upstream:
@@ -322,12 +227,12 @@ The following features are not supported or validated:
    No screen connect to eDP will cause the above error, mark it
    as un-validated feature.
 
-3.4 Intel Coffee Lake S(Cannon Point PCH)
+3.3 Intel Coffee Lake S(Cannon Point PCH)
 ------------------------------------------
 Intel CoffeeLake-S board featuring 8th Generation Intel Porcessor,
 with supoort of wifi, bluetooth, NVMe SSD.
 
-3.4.1 Validated Board Info
+3.3.1 Validated Board Info
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This BSP is only validated in following environment. If you use this BSP
@@ -352,7 +257,7 @@ in a different environment it may possibly have some issues.
 	[Chipset info]
 	Codename: Cannon Point
 
-3.4.2 Supported Features
+3.3.2 Supported Features
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following BSP features are validated and supported on boards where
@@ -395,7 +300,7 @@ the corresponding h/w features exist.
 			+ USB mouse & keyboard
 		+ Watchdog: Intel WDAT hardware watchdog
 
-3.4.3 Unsupported Features
+3.3.3 Unsupported Features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following features are not supported or validated:
@@ -404,29 +309,29 @@ The following features are not supported or validated:
 	x USB Type-C Port with DisplayPort 1.2, ThunderBolt
 	x S3/S4
 
-3.4.4 Known Issues
+3.3.4 Known Issues
 ~~~~~~~~~~~~~~~~~~~
 Error message like:
 ACPI Error: Method execution failed
 atkbd serio0: Failed to deactivate keyboard on isa0060/serio0
 is hardware related error information, please ignore it.
 
-Others refer to section 3.3.4 Know Issues.
+Others refer to section 3.2.4 Know Issues.
 
-3.4.5 Note
+3.3.5 Note
 ~~~~~~~~~~
 1) Watchdog: by default WDAT was disabled by bios, to use it:
    Change "Intel Advanced Menu -> PCH-IO Configuration -> Enable TCO timer" to "enabled"
    to enable it.
 
 
-3.5 Intel Purley 4-Socket Server Refresh(Cascade Lake)
+3.4 Intel Purley 4-Socket Server Refresh(Cascade Lake)
 ------------------------------------------------------
 
 Intel Purley 4S Server Refresh is a 4U rackmount server with Cascade Lake CPUs,
 Lewisburg chipset, and Lightning Ridge baseboard installed.
 
-3.5.1 Validated Board Info
+3.4.1 Validated Board Info
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This BSP is only validated in following environment. If you use this BSP
@@ -446,7 +351,7 @@ in a different environment it may have some issues.
 	stepping: 6
 	microcode: 0x4000013
 
-3.5.2 Supported Features
+3.4.2 Supported Features
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 	o General Platform
@@ -483,7 +388,7 @@ in a different environment it may have some issues.
 	o TPM2.0
 
 
-3.5.3 Unsupported Features
+3.4.3 Unsupported Features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following features are not supported or validated:
@@ -492,11 +397,11 @@ The following features are not supported or validated:
 	x Suspend to memory(S3)
 	x C62x Chipset QuickAssist Technology
 
-3.5.4 Notes
+3.4.4 Notes
 ~~~~~~~~~~~
 
 
-3.5.5 Known Issues
+3.4.5 Known Issues
 ~~~~~~~~~~~~~~~~~~
 
 1) In kernel booting log, you may see "pmd_set_huge: Cannot satisfy [mem 0x80000000-
