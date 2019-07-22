@@ -387,6 +387,7 @@ in a different environment it may have some issues.
 
 	o TPM2.0
 
+	o Intel Optane DC Persistent Memory Module (Code name: Apache Pass)
 
 3.4.3 Unsupported Features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -400,6 +401,8 @@ The following features are not supported or validated:
 3.4.4 Notes
 ~~~~~~~~~~~
 
+To support Intel Optane DC Persistent Memory Module(Intel Optane DCPMM), you need to read
+templates/feature/intel-persistent-memory/README first.
 
 3.4.5 Known Issues
 ~~~~~~~~~~~~~~~~~~
