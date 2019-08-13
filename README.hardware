@@ -417,5 +417,11 @@ size toward 4KB when a mapping range is covered by non-WB type of MTRRs.
 This is due to one of the endpoint of "American Megatrends, Inc. Virtual Keyboard and Mouse"
 is unreachable since hardware issue.
 
+3) CPU hotplug may failed with error: "CPU 189 has 158 vectors, 92 available. Cannot disable CPU"
+This is led by Intel vmd controller, on Purley 4s board there are 12 VMD controller,
+it will request many interrupt vectors, the vectors will run out when we plug the CPU189,
+Although it is a hardware limits, but VMD shoud not request so many IRQ, Add it as know issue
+temporarily.
+
 You may add "nohugeiomap" to kernel boot command line to disable I/O huge page mapping,
 or remove MTRR support in kernel if it is not needed.
