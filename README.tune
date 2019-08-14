@@ -10,9 +10,9 @@ Intel CPU in intel-x86 BSP.
 =====================
 Different tunning features are achieved by building different machines.
 
-This intel-x86 BSP supports the following machines:
+This intel-x86 BSP supports the following 64 bit machines:
 
-	intel-x86-32/64 (32-bit and 64-bit)
+	intel-x86-64
 	intel-haswell-64
 	intel-skylake-64
 	intel-skylake-avx512-64

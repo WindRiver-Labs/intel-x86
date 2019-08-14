@@ -4,11 +4,12 @@
 1. About this document
 ======================
 
-This is the intel-common BSP, also known as intel-x86-32/64, provide a few
+This is the intel-common BSP, also known as intel-x86-64, provide a few
 carefully selected tune options and generic hardware support to cover
 the majority of current Intel CPUs and devices. The naming follows the
 convention of intel-<TUNE>-<BITS>, where TUNE is the gcc cpu-type (used
-with mtune and march typically) and BITS is either 32 bit or 64 bit.
+with mtune and march typically) and BITS is 64 bit, 32 bit machine was
+not supported any more.
 
 Please see the README files contained in the individual BSP layers for
 BSP-specific information.
@@ -36,11 +37,6 @@ Note:
 To build a 64-bit kernel + 64-bit rootfs, use:
 
     --machine=intel-x86-64
-
-To build a 32-bit kernel + 32-bit rootfs combination, use
-the following configuration:
-
-    --machine=intel-x86-32
 
 License
 -------
@@ -1123,33 +1119,6 @@ Show intel_rapl status via sysfs:
 	short_term
 	25000000
 	2441
-
-5.18 RAM limits on 32-bit kernel
-================================
-
-The 32-bit kernel supports a maximum of 16GB of main memory,
-if a system is running RAM larger than 16GB, append "mem=16G" in kernel
-parameters.
-
-32-bit kernel boot hang without this parameter on the board that has
-more than 16GB memory.
-Booting error log:
-Call Trace:
-  [<c108920e>] ? __wake_up_common+0xe/0x70
-  [<c1071edb>] ? preempt_count_sub+0xb/0xc0
-  [<c1a05878>] ? _raw_spin_unlock_irqrestore+0x18/0x30
-  [<c10892af>] ? __wake_up+0x3f/0x50
-  [<c10649b8>] queue_work_on+0x18/0x30
-  [<c14977e5>] credit_entropy_bits+0x1d5/0x320
-  [<c1498e77>] add_interrupt_randomness+0x147/0x1a0
-  [<c10a203b>] handle_irq_event_percpu+0x15b/0x1e0
-  [<c10721ac>] ? preempt_count_add+0xc/0xd0
-  [<c10721ac>] ? preempt_count_add+0xc/0xd0
-  [<c1071edb>] ? preempt_count_sub+0xb/0xc0
-  [<c10a20f1>] handle_irq_event+0x31/0x50
-  [<c10a4970>] ? handle_simple_irq+0x90/0x90
-  [<c10a49f4>] handle_level_irq+0x84/0xf0
-  [<c1004943>] handle_irq+0x73/0x90
 
 
 6. Creating Partitioned Images(WIC)
