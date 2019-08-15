@@ -840,10 +840,13 @@ The following features are not supported or validated.
 
 	x Hardware Watchdog: Intel iTCO H/W Watchdog timer
 
-3.9.4 Note
-~~~~~~~~~~
+3.9.4 Notes
+~~~~~~~~~~~
 
-For kernel kdump feature, it is recommended to use "crashkernel=512M".
+1) For kernel kdump feature, it is recommended to use "crashkernel=512M".
+
+2) For Echo Canyon CRB, each Mini-Mezzanine slot can accpect one Alpine Acres card,
+and each card supports two SFP+ connectors, but only 10 GbE operation is supported.
 
 3.9.5 Known Issue
 ~~~~~~~~~~~~~~~~~
