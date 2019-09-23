@@ -18,3 +18,6 @@ TARGET_SUPPORTED_KTYPES_intel-x86 = "standard preempt-rt"
 do_install_append_intel-x86() {
 	rm -rf ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/crypto
 }
+
+SRCREV_machine_intel-x86 ?= "${AUTOREV}"
+SRCREV_meta_intel-x86 ?= "${AUTOREV}"
