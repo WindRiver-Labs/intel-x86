@@ -19,5 +19,6 @@ do_install_append_intel-x86() {
 	rm -rf ${D}/lib/modules/${KERNEL_VERSION}/kernel/drivers/crypto
 }
 
+KERNEL_VERSION_SANITY_SKIP = "1"
 SRCREV_machine_intel-x86 ?= "${AUTOREV}"
 SRCREV_meta_intel-x86 ?= "${AUTOREV}"
