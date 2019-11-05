@@ -39,6 +39,9 @@ do_configure_prepend() {
 	mkdir -p ${S}
 	cp -r ${STAGING_KERNEL_DIR}/tools/thermal/tmon/* ${S}
 	cp -r ${STAGING_KERNEL_DIR}/COPYING ${S}
+        # Fix compile error when pkg-config is on the dependency chain:
+        # tmon.h:42:17: error: field 'tv' has incomplete type 
+        sed -i '/PKG_CONFIG.*--cflags.*ncurses/d' ${S}/Makefile
 }
 
 do_compile() {
