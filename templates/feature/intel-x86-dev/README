@@ -1,0 +1,8 @@
+This feature enables a full-feature development environment in intel-x86
+BSP. It makes the development process easy when developers/testers want
+to build their own applications on the target instead of on build host.
+
+For other BSP related features that this template includes, please refer
+to file "require".
+
+To use this feature, add --templates feature/intel-x86-dev.
