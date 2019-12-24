@@ -425,3 +425,5 @@ temporarily.
 
 You may add "nohugeiomap" to kernel boot command line to disable I/O huge page mapping,
 or remove MTRR support in kernel if it is not needed.
+
+4) When using Intel Optane DCPMM as App Direct Mode, suspend to disk(S4) doesn't work.
