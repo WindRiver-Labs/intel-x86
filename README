@@ -1120,6 +1120,79 @@ Show intel_rapl status via sysfs:
 	25000000
 	2441
 
+5.17 TPM2
+=========
+To add TPM2 tools to rootfs, add the following template when run setup.sh
+
+	--template feature/tpm2
+
+5.18 Intel QuickAssist Technology
+=================================
+To enable this feature, please add the following template:
+
+  --template feature/intel-qat
+
+5.18.1 Intel QAT configuration files
+------------------------------------
+When the Acceleration software loads, it is configured based on settings in the
+platform-specific configuration files. The configuration files should be copied from
+/etc/conf_files or /etc/zlib_conf to /etc directory.
+
+• The name of the first configuration file for Intel® Communications Chipset 8925 to
+8955 Series devices is dh895xcc_dev0.conf.
+• The first configuration file for the Platform Controller Hub is c6xx_dev0.conf.
+• The first configuration file for Intel Atom® C3000 Processor SoC is
+c3xxx_dev0.conf.
+• The first configuration file for Intel ® Xeon® Processor D SoC is
+d15xx_dev0.conf.
+
+The second configuration file for the second QAT device is xxxx_dev2.conf, and so on.
+
+5.18.2 Kernel driver modules
+----------------------------
+All Intel QAT related kernel driver modules will be installed in
+"/lib/modules/<kernel version>/updates/drivers/crypto/qat
+
+Please note that those drivers have dependency on driver uio and dh_generic.
+
+5.18.3 QAT service
+------------------
+Once you have correct configuration files copied in /etc, you can use qat_service to
+start/stop/status/restart/shutdown qat devices.
+
+For example:
+
+$/etd/init.d/qat_service status
+
+Checking status of all devices.
+There is 3 QAT acceleration device(s) in the system:
+ qat_dev0 - type: c6xx,  inst_id: 0,  node_id: 0,  bsf: 0000:3d:00.0,  #accel: 5 #engines: 10 state: up
+ qat_dev1 - type: c6xx,  inst_id: 1,  node_id: 0,  bsf: 0000:3f:00.0,  #accel: 5 #engines: 10 state: up
+ qat_dev2 - type: c6xx,  inst_id: 2,  node_id: 0,  bsf: 0000:61:00.0,  #accel: 5 #engines: 10 state: up
+
+5.18.4 QAT samples
+------------------
+Several samples will be installed in order to make qat devices test easily.
+
+For qat:
+$ cpa_sample_code signOfLife=1
+
+For zlib-qat:
+Configuration files for zlib-qat must be used for this case.
+$ cp /etc/zlib_conf/* /etc
+
+$ ls -l / > file.txt
+$ minigzip file.txt
+$ zcat file.txt.gz
+
+$ ls -l / > file.txt
+$ zpipe < file.txt > file.txt.gz
+
+$ comptestapp -t 1 -c 16384 -n 128 -l 1
+
+For more details, please refer to Intel QAT documentations released by Intel.
+https://01.org/intel-quickassist-technology
+
 
 6. Creating Partitioned Images(WIC)
 ==================================
@@ -1162,10 +1235,3 @@ If successful, the wic script generates the image and prints its location:
          /var/tmp/wic/build/directdisk-gpt-201701090746-sda.direct
 
 Similarly, write the image to the target via dd.
-
-
-7. TPM2
-========
-To add TPM2 tools to rootfs, add the following template when run setup.sh
-
-	--template feature/tpm2
