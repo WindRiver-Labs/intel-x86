@@ -7,8 +7,7 @@ DESCRIPTION = "TMON is conceived as a tool to help visualize, tune, and \
 test the complex thermal subsystem"
 
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
-
+LIC_FILES_CHKSUM = "file://COPYING;md5=e6a75371ba4d16749254a51215d13f97"
 
 PR = "r0"
 
@@ -19,11 +18,12 @@ DEPENDS = "virtual/kernel ncurses"
 do_fetch[noexec] = "1"
 do_unpack[noexec] = "1"
 do_patch[noexec] = "1"
+do_configure[depends] += "virtual/kernel:do_shared_workdir"
 
 # This looks in S, so we better make sure there's
 # something in the directory.
 #
-do_populate_lic[depends] = "${PN}:do_configure"
+do_populate_lic[depends] += "${PN}:do_configure"
 
 
 EXTRA_OEMAKE = '\
@@ -38,7 +38,7 @@ EXTRA_OEMAKE = '\
 do_configure_prepend() {
 	mkdir -p ${S}
 	cp -r ${STAGING_KERNEL_DIR}/tools/thermal/tmon/* ${S}
-	cp -r ${STAGING_KERNEL_DIR}/COPYING ${S}
+	cp ${STAGING_KERNEL_DIR}/LICENSES/preferred/GPL-2.0 ${S}/COPYING
         # Fix compile error when pkg-config is on the dependency chain:
         # tmon.h:42:17: error: field 'tv' has incomplete type 
         sed -i '/PKG_CONFIG.*--cflags.*ncurses/d' ${S}/Makefile
