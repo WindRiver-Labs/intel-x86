@@ -16,11 +16,13 @@ This BSP supports the following boards:
 	+ Intel NUC Platform: KabyLake-U Processor, Sunrise Point-LP PCH, (NUC7i5DNK1E)
 	+ Intel Coffee Lake-S: CoffeeLake Processor, Cannon Point PCH (Coffee Lake S)
 	+ Intel Purley 4-Socket Server Refresh: Intel Cascade Lake Processor
+	+ Intel Hewitt Lake: Intel Xeon D-1600 series Processors
 
 
 2. Change History
 =================
 
+	- 2020/04 (LINUXPG-361) Add Hewitt Lake-D support
 	- 2019/07 (LINUXPG-98) Add Intel Cascade Lake 4S support
 	- 2019/06 (LINUXPG-76) [CD][BSP] Intel X86 - Core (Coffee Lake S)
 	- 2019/04 (US131896) Add NUC7i5DNK1E support
@@ -427,3 +429,89 @@ You may add "nohugeiomap" to kernel boot command line to disable I/O huge page m
 or remove MTRR support in kernel if it is not needed.
 
 4) When using Intel Optane DCPMM as App Direct Mode, suspend to disk(S4) doesn't work.
+
+3.5 Intel Hewitt Lake
+---------------------
+
+Intel Hewitt Lake (HWL) is codename of Intel Xeon D-1600 series Processors.
+
+3.5.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may have some issues.
+
+[BIOS info]
+	BIOS Version: GNVDTRL1.86B.0010.D88.1906040040
+
+[Processor info]
+	CPU: Intel(R) Xeon(R) CPU D-1653N @ 2.80GHz
+
+[Board info]
+	Base board: Echo Canyon
+
+3.5.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported.
+
+	o Bus
+		+ SMBus:
+		+ Intel Corporation 8 Series/C220 Series Chipset Family SMBus Controller [8086:8c22] (rev 05)
+		+ PCI-Express
+
+	o Network
+		+ Intel Gigabit Ethernet
+			+Intel Corporation I210 Gigabit Network Connection (rev 03)
+		+ Intel 10Gb Ethernet:
+			+ Intel Corporation Ethernet Connection X552 10 GbE SFP+
+
+	o USB
+		+ USB 2.0 EHCI controller
+		+ USB 3.0 XHCI controller
+
+	o Storage
+		+ SATA: Intel Corporation 8 Series/C220 Series Chipset Family 6-port SATA Controller 1 [AHCI mode] (rev 05)
+
+	o Multimedia
+		+ Graphics: VGA compatible controller: NVIDIA Corporation GT218 [GeForce 210] [10de:0a65] (rev a2)
+		+ Audio: Audio through HDMI port
+
+	o Power Management
+		+ Suspend to idle: ACPI S0
+		+ Suspend to DISK: ACPI S4
+		+ CPU Freq: ACPI P-state
+		+ CPU Idle: ACPI C-state
+
+	o Misc Devices
+		+ Input device
+		+ USB mouse & keyboard
+		+ IOMMU
+		+ RTC
+		+ Temperature sensor
+		+ UART: 8250/16550A compatible serial port
+
+3.5.3 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated.
+
+	x Hardware Watchdog: Intel iTCO H/W Watchdog timer
+
+3.5.4 Notes
+~~~~~~~~~~~
+
+1) For kernel kdump feature, it is recommended to use "crashkernel=512M".
+
+2) For Echo Canyon CRB, each Mini-Mezzanine slot can accpect one Alpine Acres card,
+and each card supports two SFP+ connectors, but only 10 GbE operation is supported.
+
+3.5.5 Known Issues
+~~~~~~~~~~~~~~~~~~
+
+1) You may see "CS4227 reset failed: -18" when loading ixgbe dirver for Intel X552 card.
+This is because two ports share the same CS4227 phy. The reset failure only happens on the second port.
+This message is harmless. It won't affect the system operation.
+
+2) Xorg sometimes will use 100% CPU when woking with NVIDIA GT218 graphic card, especially when moving windows.
+This issue is under investigation.
