@@ -1193,6 +1193,38 @@ $ comptestapp -t 1 -c 16384 -n 128 -l 1
 For more details, please refer to Intel QAT documentations released by Intel.
 https://01.org/intel-quickassist-technology
 
+5.18.5 SR-IOV on QAT devices
+----------------------------
+SR-IOV(Single-Root Input/Output Virtualization) enables the Linux operating system
+to create multiple VFs(virtual functions) on a single Intel QAT acceleration device to
+support acceleration for multiple Linux containers or Dockers. IOMMU should be enabled
+for SR-IOV to work correctly.
+
+All virtualization options like VT-D and SR-IOV must be enabled in BIOS.
+
+Passing "intel_iommu=on" to kernel or make sure intel_iommu is enabled as default.
+
+Make sure your QAT device support SR_IOV. Take Intel C62xx for example:
+
+$ lspci -vnd 8086:37c8
+
+The output should display one of the capabilities as:
+
+    Capabilities: [140] Single Root I/O Virtualization (SR-IOV)
+
+You must prepare proper configuration file for each QAT virtual device in /etc.
+For example, c6xx_dev0vf.conf is for the first VF QAT device.
+
+Before starting QAT service, run"echo "SRIOV_ENABLE=1" > /etc/default/qat"
+one time or run "export SRIOV_ENABLE=1" everytime.
+
+5.19.6 Note
+-----------
+1) If intel_iommu is enable, you must use SR-IOV, since PF (Physical Function) cannot
+be used with iommu enabled.
+
+2) With SR-IOV enabled, after starting QAT service, if you find some VFs are missing,
+just shutdown QAT service and start it again.
 
 6. Creating Partitioned Images(WIC)
 ==================================
