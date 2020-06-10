@@ -1,0 +1,8 @@
+intel-sst
+=========
+Intel® Speed Select Technology (Intel® SST) is a powerful new collection
+of features giving you more granular control over CPU performance for
+optimized total cost of ownership.
+
+To enable this feature, please add the following configuration parameter:
+    --template=feature/intel-sst
