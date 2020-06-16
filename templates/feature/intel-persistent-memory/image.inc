@@ -1,2 +1,2 @@
-IMAGE_INSTALL_append = " ndctl"
-IMAGE_INSTALL_append = " pmdk"
+IMAGE_INSTALL += "ndctl"
+IMAGE_INSTALL += "pmdk"

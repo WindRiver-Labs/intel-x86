@@ -1,1 +1,1 @@
-IMAGE_INSTALL_append = " intel-speed-select"
+IMAGE_INSTALL += "intel-speed-select"
