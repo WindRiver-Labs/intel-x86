@@ -7,13 +7,12 @@ MACHINE_FEATURES += "efi pcbios"
 MACHINE_FEATURES += "parser shell-tools filesystem profile network"
 
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-iwlwifi-misc"
+MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-ibt-misc"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-bnx2-mips"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-radeon"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-pcie8897"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-i915"
-MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-ibt-12-16"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-rtl8723"
-MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-ibt-17"
 
 EFI_PROVIDER ?= "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'systemd-boot', 'grub-efi', d)}"
 
