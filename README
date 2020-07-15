@@ -86,11 +86,10 @@ Note: The preempt-rt kernel type can be used with this BSP/Machine.
 =======================
 
 To get a list of patches applied to the kernel specific to this BSP along with
-patch descriptions use git-whatchanged on the default kernel 
-(git-whatchanged <kernel_type>..<bsp_name>). For example:
+patch descriptions use git-whatchanged on the default kernel. For example:
 
 	%> cd tmp-glibc/work-shared/<bsp_name>/kernel-source
-	%> git whatchanged standard/base..standard/intel-x86
+	%> git whatchanged <kernel_version>/standard/base..<kernel_version>/standard/<bsp_name>
 
 4. Boot Instructions
 ====================
