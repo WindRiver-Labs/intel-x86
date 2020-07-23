@@ -22,6 +22,9 @@ MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-ibt-17"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-iwlwifi-9000"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-ice"
 
+MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-iwlwifi-misc"
+MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-ibt-misc"
+
 EFI_PROVIDER ?= "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'systemd-boot', 'grub-efi', d)}"
 
 # grub-efi is depended in wic.bbclass, remove it to aviod depency error.
