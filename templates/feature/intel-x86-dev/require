@@ -7,3 +7,5 @@ feature/kdump
 feature/kexec
 feature/self-hosted
 feature/tpm2
+feature/intel-qat
+feature/intel-sst
