@@ -20,6 +20,7 @@ MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-ibt-12-16"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-rtl8723"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-ibt-17"
 MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-iwlwifi-9000"
+MACHINE_EXTRA_RRECOMMENDS += "linux-firmware-ice"
 
 EFI_PROVIDER ?= "${@bb.utils.contains('INCOMPATIBLE_LICENSE', 'GPLv3', 'systemd-boot', 'grub-efi', d)}"
 
