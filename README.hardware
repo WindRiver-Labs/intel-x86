@@ -424,6 +424,9 @@ This message is a harmless warning. It just shows that the I/O remapping code ca
 up huge page mapping due to MTRR override and it will fall back to use a smaller page
 size toward 4KB when a mapping range is covered by non-WB type of MTRRs.
 
+You may add "nohugeiomap" to kernel boot command line to disable I/O huge page mapping,
+or remove MTRR support in kernel if it is not needed.
+
 2) dmesg will show the error: "usbhid: probe of 1-13:1.1 failed with error -110"
 This is due to one of the endpoint of "American Megatrends, Inc. Virtual Keyboard and Mouse"
 is unreachable since hardware issue.
@@ -433,9 +436,6 @@ This is led by Intel vmd controller, on Purley 4s board there are 12 VMD control
 it will request many interrupt vectors, the vectors will run out when we plug the CPU189,
 Although it is a hardware limits, but VMD shoud not request so many IRQ, Add it as know issue
 temporarily.
-
-You may add "nohugeiomap" to kernel boot command line to disable I/O huge page mapping,
-or remove MTRR support in kernel if it is not needed.
 
 4) When using Intel Optane DCPMM as App Direct Mode, suspend to disk(S4) doesn't work.
 
