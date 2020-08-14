@@ -20,10 +20,12 @@ This BSP supports the following boards:
 	+ Intel Cooper Lake: Intel Xeon Scalable Processors
 	+ Intel Ice Lake U platform: Ice Lake U42 Processor
 	+ Intel Ice Lake Y platform: Ice Lake U42 Processor
+	+ Intel Comet Lake S: Intel Core Processor Family, PCH: CMP-H/CMP-V
 
 2. Change History
 =================
 
+	- 2020/09 (LINUXPG-451) Add Comet Lake S Support
 	- 2020/07 (LINUXPG-457) Add Intel Ice Lake-Y support
 	- 2020/07 (LINUXPG-457) Add Intel Ice Lake-U support
 	- 2020/06 (LINUXPG-444) Add Cooper Lake support
@@ -798,3 +800,239 @@ The following features are not supported or validated:
 1) Watchdog: By default WDAT was disabled by bios, to use it:
 Change "Intel Advanced Menu -> PCH-IO Configuration -> Enable TCO timer" to
 "enabled" to enable it.
+
+3.9 Intel Comet Lake S with PCH-H
+---------------------------------
+
+Intel Comet Lake S is 10th Generation Intel(R) Core(TM) Processor Family
+for Internet of Things (IoT) Applications, based on an enhanced 14nm
+process microarchitecture.
+
+3.9.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP in a
+different environment it may have some issues.
+
+[BIOS Info]
+	Vendor: Intel Corporation
+	Version: CMLSFWR1.R00.2095.D00.2002280938
+	Release Date: 02/28/2020
+
+[Processor Info]
+	CPU family: 6
+	Model: 165
+	Model name: i9-10900 CPU @ 2.80GHz/i9-10900K CPU @ 3.70GHz
+	Stepping: 4
+
+[PCH Info]
+	PCH SKU: Z490
+	Stepping: A0
+
+3.9.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported.
+
+	o General Platform
+		+ perf: H/W based PMU
+
+	o Bus
+		+ SMBus:
+			+ Intel Corporation Comet Lake PCH SMBus Controller [8086:06a3]
+		+ PCI-Express
+
+	o Network
+		+ Gbe
+			+ Intel Corporation Ethernet Connection (11) I219-V [8086:0d4d]
+			+ Intel Corporation Intel(R) Ethernet Controller I225-LM [8086:15f2] (rev 01)
+
+	o USB
+		+ USB 3.0 XHCI controller
+			+ Intel Corporation Comet Lake USB xHCI Host Controller [8086:06ed]
+				+ USB 2.0 (480Mbs)
+				+ USB 3.2 Gen 1 (5Gbs)
+				+ USB 3.2 Gen 2 Type C (10Gbs)
+
+	o Thunderbolt 3
+		+ Intel Corporation JHL7540 Thunderbolt 3 NHI [Titan Ridge 2C 2018] [8086:15e8] (rev 06)
+
+	o Storage
+		+ NVME
+		+ SATA
+
+	o Multimedia
+		+ Audio
+			+ ALC711 Analog
+			+ HDMI
+			+ DP
+		+ Video
+			+ VGA compatible controller [0300]: Intel Corporation Device [8086:9bc5] (rev 05)
+				+ HDMI
+				+ DP
+				+ Thunderbolt 3
+
+	o WiFi & Bluetooth
+		+ M.2 2230
+
+	o Power Management
+		+ Suspend to idle: ACPI S0
+		+ Suspend to memory: ACPI S3
+		+ Suspend to disk: ACPI S4
+		+ CPU Freq: ACPI P-state
+		+ CPU Freq: ACPI C-state
+
+	o Misc Devices
+		+ UART: 8250/16550A compatible serial port
+		+ Input device
+			+ PS2 mouse & keyboard
+			+ USB mouse & keyboard
+		+ Watchdog: PCH ACPI timer
+
+3.9.3 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated.
+
+	x PTT (fTPM)
+
+3.9.4 Known Issues
+~~~~~~~~~~~~~~~~~~
+
+1) You may see the followng warnings and call trace during suspending to disk,
+They don’t affect system hibernation and resume. You can bring the network interface
+down before hibernation to avoid them.
+
+    e1000e 0000:00:1f.6 eth0: Detected Hardware Unit Hang:
+      TDH                  <0>
+      TDT                  <2>
+      next_to_use          <2>
+      next_to_clean        <0>
+    buffer_info[next_to_clean]:
+      time_stamp           <100288a83>
+      next_to_watch        <0>
+      jiffies              <10028b100>
+      next_to_watch.status <0>
+    MAC Status             <40000083>
+    PHY Status             <796d>
+    PHY 1000BASE-T Status  <3800>
+    PHY Extended Status    <3000>
+    PCI Status             <10>
+
+    Call Trace:
+     <IRQ>
+     ? qdisc_destroy+0x130/0x130
+     call_timer_fn+0x37/0x180
+     ? qdisc_destroy+0x130/0x130
+     expire_timers+0xbe/0x130
+     run_timer_softirq+0xda/0x190
+     ? _raw_spin_lock_irq+0x18/0x40
+     ? __hrtimer_run_queues+0x138/0x2e0
+     ? lapic_timer_shutdown+0x57/0x60
+     ? clockevents_switch_state+0x48/0xe0
+     __do_softirq+0xfe/0x373
+     irq_exit+0x9e/0xc0
+     smp_apic_timer_interrupt+0x82/0x170
+     apic_timer_interrupt+0xf/0x20
+     </IRQ>
+
+2) If you are using thunderbolt 3 hub, you may encounter the following kernel message
+after running “echo 1 > /sys/bus/thunderbolt/devices/0-1/authorized”,
+
+    pci 0000:06:00.0: No bus number available for hot-added bridge
+
+Adding “pci=realloc,assign-busses,hpbussize=0x33” to kernel boot cmdline may solve the issue.
+
+3.10 Intel Comet Lake S with PCH-V
+----------------------------------
+
+Intel Comet Lake S is 10th Generation Intel(R) Core(TM) Processor Family
+for Internet of Things (IoT) Applications, based on an enhanced 14nm
+process microarchitecture.
+
+3.10.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP in a
+different environment it may have some issues.
+
+[BIOS Info]
+	Vendor: Intel Corporation
+	Version: CMLSFWR1.R00.1434.D00.1910241950
+	Release Date: 10/24/2019
+
+[Processor Info]
+	CPU family: 6
+	Model: 165
+	Model name: Genuine Intel(R) CPU 0000 @ 3.00GHz
+	Stepping: 0
+
+[PCH Info]
+	PCH SKU: Super SKU
+	Stepping: A0
+
+3.10.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported.
+
+	o General Platform
+		+ perf: H/W based PMU
+
+	o Bus
+		+ SMBus:
+			+ SMBus [0c05]: Intel Corporation Device [8086:a3a3]
+		+ PCI-Express
+
+	o Network
+		+ Gbe
+			+ Intel Corporation Ethernet Connection (12) I219-V [8086:0d55]
+
+	o USB
+		+ USB 3.0 XHCI controller
+			+ USB controller [0c03]: Intel Corporation Device [8086:a3af]
+				+ USB 2.0 (480Mbs)
+				+ USB 3.2 Gen 1 Type C (5Gbs)
+
+	o Storage
+		+ NVME
+		+ SATA
+
+	o Multimedia
+		+ Audio
+			+ ALC711 Analog
+			+ HDMI
+			+ DP
+		+ Video
+			+ VGA compatible controller [0300]: Intel Corporation Device [8086:9bc8]
+				+ HDMI
+				+ DP
+
+	o WiFi & Bluetooth
+		+ M.2 2230
+
+	o Power Management
+		+ Suspend to idle: ACPI S0
+		+ Suspend to memory: ACPI S3
+		+ Suspend to disk: ACPI S4
+		+ CPU Freq: ACPI P-state
+		+ CPU Freq: ACPI C-state
+
+	o Misc Devices
+		+ UART: 8250/16550A compatible serial port
+		+ Input device
+			+ PS2 mouse & keyboard
+			+ USB mouse & keyboard
+		+ Watchdog: PCH ACPI timer
+
+3.10.3 Unsupported Feature
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following feature is not supported or validated.
+
+	x PTT (fTPM)
+
+3.10.4 Known Issue
+~~~~~~~~~~~~~~~~~~
+
+Same as 3.9.4 (1)
