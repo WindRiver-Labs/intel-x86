@@ -16,11 +16,12 @@ This BSP supports the following boards:
 	+ Intel NUC Platform: KabyLake-U Processor, Sunrise Point-LP PCH, (NUC7i5DNK1E)
 	+ Intel Coffee Lake-S: CoffeeLake Processor, Cannon Point PCH (Coffee Lake S)
 	+ Intel Purley 4-Socket Server Refresh: Intel Cascade Lake Processor
-
+	+ Intel Snow Ridge: Intel Atom(R) P5362 processor
 
 2. Change History
 =================
 
+	- 2020/09 (LINUXPG-488) Add Snow Ridge NS support
 	- 2019/07 (LINUXPG-98) Add Intel Cascade Lake 4S support
 	- 2019/06 (LINUXPG-76) [CD][BSP] Intel X86 - Core (Coffee Lake S)
 	- 2019/04 (US131896) Add NUC7i5DNK1E support
@@ -130,7 +131,6 @@ Add "video=efifb:off" to kernel cmdline to kill this error.
 
 2) After waking up from S4, serial port console doesn't work.
 Add "no_console_suspend" to kernel cmdline as a workaround.
-
 
 3.2 Intel NUC7i5DNK1E
 ----------------------
@@ -324,7 +324,6 @@ Others refer to section 3.2.4 Know Issues.
    Change "Intel Advanced Menu -> PCH-IO Configuration -> Enable TCO timer" to "enabled"
    to enable it.
 
-
 3.4 Intel Purley 4-Socket Server Refresh(Cascade Lake)
 ------------------------------------------------------
 
@@ -425,3 +424,97 @@ This is led by Intel vmd controller, on Purley 4s board there are 12 VMD control
 it will request many interrupt vectors, the vectors will run out when we plug the CPU189,
 Although it is a hardware limits, but VMD shoud not request so many IRQ, Add it as know issue
 temporarily.
+
+3.5 Intel Snow Ridge NS Mode
+----------------------------
+Intel Snow Ridge Network Series (NS) System-on-a-Chip (SoC) product family
+is Intel's next generation of communication processors based on Intel 10 nm
+process technology.
+
+3.5.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may have some issues.
+
+[BIOS Info]
+	Vendor: Intel Corporation
+	Version: JBVLCRB2.86B.0014.P20.2004020248
+	Release Date: 04/02/2020
+
+[Processor Info]
+	CPU family:          6
+	Model:               134
+	Model name:          Intel Atom(R) P5362 processor
+	Stepping:            5
+
+[Board info]
+	Jacobsville NS Frost Creek Customer Reference Board (CRB)
+
+3.5.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported.
+
+	o Bus
+		+ SMBus:
+			+ SMBus [0c05]: Intel Corporation Device [8086:18df] (rev 10)
+		+ PCI-Express
+
+	o Network
+		+ Intel Gigabit Ethernet
+			+ Intel Corporation I210 Gigabit Network Connection [8086:1533] (rev 03)
+		+ Intel E800 series 10Gb Ethernet (1xQSFP and 4x SFP)
+			+ Intel Corporation Device [8086:1891] (rev 11)
+
+	o USB
+		+ USB 3.0 XHCI controller
+			+ USB controller: Intel Corporation Device [8086:18d0] (rev 10)
+
+	o Storage
+		+ SATA
+			+ SATA controller [0106]: Intel Corporation Device [8086:18b3] (rev 10)
+			+ SATA controller [0106]: Intel Corporation Device [8086:18f3] (rev 10)
+
+	o Multimedia
+		+ Graphics: VGA compatible controller [0300]: Matrox Electronics Systems Ltd. Millennium G550 [102b:2527] (rev 01)
+
+	o Power Management
+		+ Suspend to IDLE: ACPI S0
+		+ Suspend to DISK: ACPI S4
+		+ CPU Freq: ACPI P-state
+		+ CPU Idle: ACPI C-state
+
+	o Watchdog
+		+ Intel TCO Hardware WatchDog
+
+	o Misc Devices
+		+ Input device
+			+ USB mouse & keyboard
+		+ UART
+			+ Serial controller: Intel Corporation Device 18d8 (rev 10) (prog-if 02 [16550])
+		+ IOMMU
+		+ RTC
+		+ CPU core temperature sensor
+		+ EDAC
+
+3.5.3 Unsupported Feature
+~~~~~~~~~~~~~~~~~~~~~~~~~
+The following feature is not supported or validated.
+
+	x Intel C4xxx Series QAT [8086:18a0] (rev 11)
+
+3.5.4 Known Issues
+~~~~~~~~~~~~~~~~~~
+
+(1) Serial port console may be not resumed after system comes back from APCI S4.
+Use the following commands to restore.
+	root@intel-x86-64:~# systemctl restart serial-getty@ttyS0.service
+
+(2) You may see "matroxfb: probe of 0000:02:00.0 failed with error -1" in kernel
+boot log. This is because matroxfb is in conflict with efifb over PCI memory resources.
+To use matroxfb and disable efifb, add "video=efifb:off" in kernel boot command line.
+Otherwise, efifb will be used.
+
+(3) Matrox Millennium G550 add-in graphic card may not be ACPI S4 capable when using
+matroxfb_base as the frame buffer driver, your system may not be able to resume from
+suspend-to-disk.
