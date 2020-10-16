@@ -21,10 +21,12 @@ This BSP supports the following boards:
 	+ Intel Ice Lake U platform: Ice Lake U42 Processor
 	+ Intel Ice Lake Y platform: Ice Lake U42 Processor
 	+ Intel Comet Lake S: Intel Core Processor Family, PCH: CMP-H/CMP-V
+	+ Intel Whiskey Lake U platform: CoffeeLake Processor, Cannon Lake PCH (Whiskey Lake U)
 
 2. Change History
 =================
 
+	- 2020/10 (LINUXPG-582) Add Intel Whiskey Lake U support
 	- 2020/09 (LINUXPG-451) Add Comet Lake S Support
 	- 2020/07 (LINUXPG-457) Add Intel Ice Lake-Y support
 	- 2020/07 (LINUXPG-457) Add Intel Ice Lake-U support
@@ -1036,3 +1038,98 @@ The following feature is not supported or validated.
 ~~~~~~~~~~~~~~~~~~
 
 Same as 3.9.4 (1)
+
+3.11 Intel Whiskey Lake U(Cannon Point PCH)
+-------------------------------------------
+
+Intel Whiskey Lake board is compatible with whiskey Lake U42 and Coffee Lake U43e
+processors, which can support wifi, bluetooth, SATA and DP.
+
+3.11.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may possibly have some issues.
+
+[Board info]
+	Vendor: Intel Corporation
+	Platform: Intel Whiskey Lake U42
+	SoC Codename: Whiskey Lake
+
+[BIOS info]
+	BIOS Version: CNLSFWR1.R00.X141.B01.1804120214
+	Build Date: 02:14 04/12/2018
+
+[Processor info]
+	Name: CoffeeLake ULT
+	Brand: Genuine Intel(R) CPU 0000 @ 1.80GHz
+	Core: 8
+	ID: 0x806EB
+	Stepping: W0
+	Microcode Rev: 0x00000084
+
+[Chipset info]
+	Codename: Cannon Lake
+
+3.11.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported on boards where
+the corresponding h/w features exist.
+
+	o Bus
+		+ I2C/SMBus:
+			+ Intel Corporation Cannon Point-LP SMBus Controller [8086:9da3] (rev 30)
+
+	o Network
+		+ Intel E1000E Gigabit Ethernet:
+			+ Intel Corporation Ethernet Connection (6) I219-V [8086:15be] (rev 30)
+
+	o USB
+		+ USB 3.0 XHCI controller
+			+ Intel Corporation Cannon Point-LP USB 3.1 xHCI Controller [8086:9ded] (rev 30) (prog-if 30 [XHCI])
+				+ USB 2.0
+				+ USB 3.1
+
+	o Storage
+		+ SATA:
+			+ Intel Corporation Cannon Point-LP SATA Controller [AHCI Mode] [8086:9dd3] (rev 30) (prog-if 01 [AHCI 1.0])
+
+	o Multimedia
+		+ Graphics:
+			+ Intel Corporation UHD Graphics 620 (Whiskey Lake)(i915) [8086:3ea0] (prog-if 00 [VGA controller])
+				+ Two DP DisplayPort
+				+ One eDP DisplayPort
+		+ Audio:
+			+ Intel HD Audio via the HDMI DisplayPort
+
+	o Wireless
+		+ Wifi: Intel Wireless@9560NGW
+			+ Intel Corporation Cannon Point-LP CNVi [Wireless-AC] [8086:9df0] (rev 30)
+		+ Bluetooth: Intel Wireless@9560NGW
+
+	o Misc Devices
+		+ Input device:
+			+ USB mouse & keyboard
+		+ Watchdog: Intel WDAT hardware watchdog
+
+3.11.3 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated:
+
+	x EDAC
+	x USB Type-C Port
+	x Realtek HD Audio via a stereo headphone 3.5mm jack
+	x Touch Screen
+
+3.11.4 Note
+~~~~~~~~~~~
+1) Watchdog: by default WDAT was disabled by BIOS, to use it:
+Change "Intel Advanced Menu -> PCH-IO Configuration -> Enable TCO timer" to "enabled" to enable it.
+
+3.11.5 Known Issues
+~~~~~~~~~~~~~~~~~~~
+
+1) DP (DisplayPort) hotplug malfunction:
+The DP hotplug would not work if the board boots with the DP connector unplugged.
