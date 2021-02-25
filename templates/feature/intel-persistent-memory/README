@@ -4,4 +4,9 @@ This feature provides additional kernel config fragments and userspace packages
 to support Intel Optane DIMM (codename: Apache Pass DIMM).
 
 To enable this feature, please add the following configuration parameter:
+
     --template=feature/intel-persistent-memory
+
+#@TYPE: Wrtemplate
+#@NAME: intel-persistent-memory
+#@DESCRIPTION: Install ndctl pmdk to rootfs, add pmem support to the image

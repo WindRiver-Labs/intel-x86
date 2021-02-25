@@ -3,4 +3,9 @@ intel-qat
 This feature adds support for Intel QuickAssist Technology in intel-x86 BSP.
 
 To enable this feature, please add the following configuration parameter:
+
     --template=feature/intel-qat
+
+#@TYPE: Wrtemplate
+#@NAME: intel-qat
+#@DESCRIPTION: Add QAT drivers to the image

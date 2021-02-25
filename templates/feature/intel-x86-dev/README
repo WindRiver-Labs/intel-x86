@@ -4,5 +4,11 @@ to build their own applications on the target instead of on build host.
 
 For other BSP related features that this template includes, please refer
 to file "require".
+To use this feature, add
 
-To use this feature, add --templates feature/intel-x86-dev.
+    --templates feature/intel-x86-dev
+
+#@TYPE: Wrtemplate
+#@NAME: intel-x86-dev
+#@DESCRIPTION: Install "require" features together such as:
+	       edac/kdump/intel-qat/intel-sst ... to rootfs or image.
