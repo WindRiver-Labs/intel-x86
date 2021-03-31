@@ -12,15 +12,13 @@ Table of Contents
 
 This BSP supports the following boards:
 
-	+ Intel Harcuvar platform: Atom Pocessor, Denverton-NS SoC, (Harcuvar)
 	+ Intel NUC Platform: KabyLake-U Processor, Sunrise Point-LP PCH, (NUC7i5DNK1E)
-	+ Intel Coffee Lake-S: CoffeeLake Processor, Cannon Point PCH (Coffee Lake S)
-	+ Intel Purley 4-Socket Server Refresh: Intel Cascade Lake Processor
-	+ Intel Snow Ridge: Intel Atom(R) P5362 processor
 
 2. Change History
 =================
 
+	- 2021/03 (LINCD-4821) Remove obsoleted and unsupported platforms: Harcuvar, Coffee Lake-S,
+	          Cascade Lake and Snow Ridge NS
 	- 2020/09 (LINUXPG-488) Add Snow Ridge NS support
 	- 2019/07 (LINUXPG-98) Add Intel Cascade Lake 4S support
 	- 2019/06 (LINUXPG-76) [CD][BSP] Intel X86 - Core (Coffee Lake S)
@@ -36,110 +34,14 @@ This BSP supports the following boards:
 3. BSP Notes
 ============
 
-3.1 Intel Harcuvar(Denverton-NS)
---------------------------------
-
-Harcuvar belongs to Denverton SoC Product Family, with support of DDR4, 4x SFP+
-and QAT.
-
-3.1.1 Validated Board Info
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This BSP is only validated in following environment. If you use this BSP
-in a different environment it may possibly have some issues.
-
-[Board]
-	Vendor: Intel Corporation
-	Platform: Harcuvar
-	SoC Codename: Denverton-NS
-
-[BIOS]
-	BIOS Version: HAVLCRB1.X64.0015.D62.1708310404
-
-[Processor]
-	Codename: Denverton-NS
-	Brand: Genuine Intel(R) CPU @ 1.8GHz
-	Core: 16
-	ID: 0x506F0
-	Stepping: 1
-	Microcode Rev: 0x0000000E
-
-[Chipset]
-	Codename: Denverton-NS
-
-3.1.2 Supported Features
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following BSP features are validated and supported.
-
-	o General Platform
-		+ perf: H/W based PMU
-
-	o Bus
-		+ PCI/PCI-Express
-		+ I2C/SMBus:
-			+ Intel Corporation DNV SMBus controller
-
-	o Network
-		+ Intel 10Gb Ethernet:
-			+ Intel Corporation 4x 10Gbe with SFP+
-
-	o USB
-		+ USB 2.0 EHCI controller
-		+ USB 3.0 XHCI controller
-
-	o Storage
-		+ SATA: AHCI SATA controller
-			+ SATA 0 (Blue) for NGFF M.2 Rise Card
-		+ eMMC card: Secure Digital Host Controller
-
-	o Multimedia
-		+ Graphics: Matrox Electronics Systems Ltd. Millennium G550
-
-	o Misc Devices
-		+ UART: 8250/16550A compatible serial port
-		+ Input device
-			+ USB mouse & keyboard
-		+ Hardware Watchdog
-			+ Intel iTCO H/W Watchdog Timer
-
-3.1.3 Unsupported Features
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following features are not supported or validated.
-
-	x Suspend to Memory (ACPI S3)
-	x EDAC
-
-3.1.4 Notes
-~~~~~~~~~~~
-
-1) For Kdump, a proper value for load address of dump-capture kernel is needed,
-we recommend crashkernel is 512M@64M.
-
-2) To enable EDAC feature and make it work well, you should enable
-"Relax Security Configuration" in BIOS as following path:
-	EDKII -> Security -> Relax Security Configuration
-
-3.1.5 Known Issues
-~~~~~~~~~~~~~~~~~~
-
-1) Kernel booting log shows "matroxfb: probe of 0000:06:00.0 failed with error -1".
-This is due to the conflict between efifb and matroxfb, and upstream
-also has the same issue.
-Add "video=efifb:off" to kernel cmdline to kill this error.
-
-2) After waking up from S4, serial port console doesn't work.
-Add "no_console_suspend" to kernel cmdline as a workaround.
-
-3.2 Intel NUC7i5DNK1E
-----------------------
+3.1 Intel NUC7i5DNK1E
+---------------------
 
 NUC7i5DNK1E board built with a 7th generation Intel CoreTM i5 processor
 code name KabyLake U, wifi and onboard ethernet support,  with Intel
 Corporation HD Graphics 620.
 
-3.2.1 Validated Board Info
+3.1.1 Validated Board Info
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This BSP is only validated in following environment. If you use this BSP
@@ -162,7 +64,7 @@ in a different environment it may possibly have some issues.
 [Chipset info]
 	Codename: Sunrise Point-LP
 
-3.2.2 Supported Features
+3.1.2 Supported Features
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following BSP features are validated and supported on boards where
@@ -207,7 +109,7 @@ the corresponding h/w features exist.
 		+ HW Monitor: Intel CPU core temperature sensor
 		+ Trusted Platform Module
 
-3.2.3 Unsupported Features
+3.1.3 Unsupported Features
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following features are not supported or validated:
@@ -216,7 +118,7 @@ The following features are not supported or validated:
 	x High Speed Custom Solutions connector
 	x internal 9pin UART header
 
-3.2.4 Known Issues
+3.1.4 Known Issues
 ~~~~~~~~~~~~~~~~~~
 1) boot error: thermal thermal_zone3: failed to read out thermal zone
    It is the known upstream issue, reported in upstream:
@@ -226,295 +128,3 @@ The following features are not supported or validated:
 2) boot error: [drm] failed to retrieve link info, disabling eDP
    No screen connect to eDP will cause the above error, mark it
    as un-validated feature.
-
-3.3 Intel Coffee Lake S(Cannon Point PCH)
-------------------------------------------
-Intel CoffeeLake-S board featuring 8th Generation Intel Porcessor,
-with supoort of wifi, bluetooth, NVMe SSD.
-
-3.3.1 Validated Board Info
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This BSP is only validated in following environment. If you use this BSP
-in a different environment it may possibly have some issues.
-
-	[Board info]
-	Vendor: Intel Corporation
-	Platform: Intel CoffeeLake-S
-	SoC Codename: CoffeeLake S
-
-	[BIOS info]
-	BIOS Version: CNLSFWR1.R00.X118.B19.1802080131 02/08/2018
-
-	[Processor info]
-	Codename: CoffeeLake S
-	Brand: Intel(R) Core(TM) i7-8700 CPU @ 3.20GHz
-	Core: 6
-	ID: 0x906EA
-	Stepping: 10
-	Microcode Rev: 0x00000084
-
-	[Chipset info]
-	Codename: Cannon Point
-
-3.3.2 Supported Features
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following BSP features are validated and supported on boards where
-the corresponding h/w features exist.
-
-	o Bus
-		+ PCI/PCI-Express
-		+ I2C/SMBus:
-			+ Intel Corporation SMBus controller
-
-	o Network
-		+ Intel E1000E Gigabit Ethernet:
-			+ Intel Corporation Ethernet Connection I219-V Ethernet controller
-		+ WIFI:
-			+ Intel Corporation Wireless 9560NGW (Intel Corporation Dual Band Wireless-AC 9560NGW adapter with Bluetooth)
-
-	o USB
-		+ USB Host:
-			+ USB 2.0 EHCI controller
-			+ USB 3.0 XHCI controller
-			+ USB 3.1 XHCI controller
-
-	o Storage
-		+ SATA: SATA: AHCI SATA controller
-		+ NVMe: PCI Express based Solid-State Drives (SATA M.2 SSDs)
-		+ MMC: SD Host controller
-
-	o Multimedia
-		+ Graphics:
-			+ Intel Corporation I915 Integrated Graphics Controller
-			+ One HDMI DisplayPort
-			+ One DP DisplayPort
-		+ Audio:
-			+ Intel HD Audio via the HDMI DisplayPort
-			+ Realtek HD Audio via a stereo headphone 3.5mm jack
-
-	o Misc Devices
-		+ UART: 8250/16550A compatible serial port
-		+ Input device
-			+ USB mouse & keyboard
-		+ Watchdog: Intel WDAT hardware watchdog
-
-3.3.3 Unsupported Features
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following features are not supported or validated:
-
-	x EDAC
-	x USB Type-C Port with DisplayPort 1.2, ThunderBolt
-	x S3/S4
-
-3.3.4 Known Issues
-~~~~~~~~~~~~~~~~~~~
-Error message like:
-ACPI Error: Method execution failed
-atkbd serio0: Failed to deactivate keyboard on isa0060/serio0
-is hardware related error information, please ignore it.
-
-Others refer to section 3.2.4 Know Issues.
-
-3.3.5 Note
-~~~~~~~~~~
-1) Watchdog: by default WDAT was disabled by bios, to use it:
-   Change "Intel Advanced Menu -> PCH-IO Configuration -> Enable TCO timer" to "enabled"
-   to enable it.
-
-3.4 Intel Purley 4-Socket Server Refresh(Cascade Lake)
-------------------------------------------------------
-
-Intel Purley 4S Server Refresh is a 4U rackmount server with Cascade Lake CPUs,
-Lewisburg chipset, and Lightning Ridge baseboard installed.
-
-3.4.1 Validated Board Info
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-This BSP is only validated in following environment. If you use this BSP
-in a different environment it may have some issues.
-
-[BIOS info]
-	Vendor: Intel Corporation
-	Version: PLYXCRB1.86B.0564.D09.1812120307
-	Release Date: 12/12/2018
-
-[Processor info]
-	Codename: Intel Cascade Lake B0
-	vendor_id: GenuineIntel
-	cpu family: 6
-	model: 85
-	model name: Intel(R) Xeon(R) Platinum 8260L CPU @ 2.40GHz
-	stepping: 6
-	microcode: 0x4000013
-
-3.4.2 Supported Features
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-	o General Platform
-		+ perf: H/W based PMU
-
-	o Bus
-		+ PCI/PCI-Express/Mini-PCI-Express
-		+ SMBus
-
-	o Network
-		+ Gb Ethernet:Intel Corporation I210 Gigabit Network Connection
-		+ QSFP+: Intel Corporation Ethernet Connection X722 (i40e)
-
-	o USB
-		+ USB 3.0 Host: xHCI controller
-
-	o Storage
-		+ NVMe
-		+ SATA3
-
-	o Multimedia
-		+ Graphics: Matrox Electronics Systems Ltd. MGA G200e (PCI id: 0x0522)
-
-	o Power Management
-		+ CPU Freq: ACPI P-state
-		+ CPU Idle: ACPI C-state
-
-	o Misc Devices
-		+ RTC: PC-style CMOS RTC
-		+ Input device
-			+ USB mouse & keyboard
-		+ HW Monitor: Intel CPU core temperature sensor
-
-	o TPM2.0
-
-	o Intel Optane DC Persistent Memory Module (Code name: Apache Pass)
-
-3.4.3 Unsupported Features
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following features are not supported or validated:
-
-	x Hardware Watchdog
-	x Suspend to memory(S3)
-	x C62x Chipset QuickAssist Technology
-
-3.4.4 Notes
-~~~~~~~~~~~
-
-To support Intel Optane DC Persistent Memory Module(Intel Optane DCPMM), you need to read
-templates/feature/intel-persistent-memory/README first.
-
-3.4.5 Known Issues
-~~~~~~~~~~~~~~~~~~
-
-1) In kernel booting log, you may see "pmd_set_huge: Cannot satisfy [mem 0x80000000-
-0x80200000] with a huge-page mapping due to MTRR override.".
-This message is a harmless warning. It just shows that the I/O remapping code can't set
-up huge page mapping due to MTRR override and it will fall back to use a smaller page
-size toward 4KB when a mapping range is covered by non-WB type of MTRRs.
-
-You may add "nohugeiomap" to kernel boot command line to disable I/O huge page mapping,
-or remove MTRR support in kernel if it is not needed.
-
-2) dmesg will show the error: "usbhid: probe of 1-13:1.1 failed with error -110"
-This is due to one of the endpoint of "American Megatrends, Inc. Virtual Keyboard and Mouse"
-is unreachable since hardware issue.
-
-3) CPU hotplug may failed with error: "CPU 189 has 158 vectors, 92 available. Cannot disable CPU"
-This is led by Intel vmd controller, on Purley 4s board there are 12 VMD controller,
-it will request many interrupt vectors, the vectors will run out when we plug the CPU189,
-Although it is a hardware limits, but VMD shoud not request so many IRQ, Add it as know issue
-temporarily.
-
-3.5 Intel Snow Ridge NS Mode
-----------------------------
-Intel Snow Ridge Network Series (NS) System-on-a-Chip (SoC) product family
-is Intel's next generation of communication processors based on Intel 10 nm
-process technology.
-
-3.5.1 Validated Board Info
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-This BSP is only validated in following environment. If you use this BSP
-in a different environment it may have some issues.
-
-[BIOS Info]
-	Vendor: Intel Corporation
-	Version: JBVLCRB2.86B.0014.P20.2004020248
-	Release Date: 04/02/2020
-
-[Processor Info]
-	CPU family:          6
-	Model:               134
-	Model name:          Intel Atom(R) P5362 processor
-	Stepping:            5
-
-[Board info]
-	Jacobsville NS Frost Creek Customer Reference Board (CRB)
-
-3.5.2 Supported Features
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-The following BSP features are validated and supported.
-
-	o Bus
-		+ SMBus:
-			+ SMBus [0c05]: Intel Corporation Device [8086:18df] (rev 10)
-		+ PCI-Express
-
-	o Network
-		+ Intel Gigabit Ethernet
-			+ Intel Corporation I210 Gigabit Network Connection [8086:1533] (rev 03)
-		+ Intel E800 series 10Gb Ethernet (1xQSFP and 4x SFP)
-			+ Intel Corporation Device [8086:1891] (rev 11)
-
-	o USB
-		+ USB 3.0 XHCI controller
-			+ USB controller: Intel Corporation Device [8086:18d0] (rev 10)
-
-	o Storage
-		+ SATA
-			+ SATA controller [0106]: Intel Corporation Device [8086:18b3] (rev 10)
-			+ SATA controller [0106]: Intel Corporation Device [8086:18f3] (rev 10)
-
-	o Multimedia
-		+ Graphics: VGA compatible controller [0300]: Matrox Electronics Systems Ltd. Millennium G550 [102b:2527] (rev 01)
-
-	o Power Management
-		+ Suspend to IDLE: ACPI S0
-		+ Suspend to DISK: ACPI S4
-		+ CPU Freq: ACPI P-state
-		+ CPU Idle: ACPI C-state
-
-	o Watchdog
-		+ Intel TCO Hardware WatchDog
-
-	o Misc Devices
-		+ Input device
-			+ USB mouse & keyboard
-		+ UART
-			+ Serial controller: Intel Corporation Device 18d8 (rev 10) (prog-if 02 [16550])
-		+ IOMMU
-		+ RTC
-		+ CPU core temperature sensor
-		+ EDAC
-
-3.5.3 Unsupported Feature
-~~~~~~~~~~~~~~~~~~~~~~~~~
-The following feature is not supported or validated.
-
-	x Intel C4xxx Series QAT [8086:18a0] (rev 11)
-
-3.5.4 Known Issues
-~~~~~~~~~~~~~~~~~~
-
-(1) Serial port console may be not resumed after system comes back from APCI S4.
-Use the following commands to restore.
-	root@intel-x86-64:~# systemctl restart serial-getty@ttyS0.service
-
-(2) You may see "matroxfb: probe of 0000:02:00.0 failed with error -1" in kernel
-boot log. This is because matroxfb is in conflict with efifb over PCI memory resources.
-To use matroxfb and disable efifb, add "video=efifb:off" in kernel boot command line.
-Otherwise, efifb will be used.
-
-(3) Matrox Millennium G550 add-in graphic card may not be ACPI S4 capable when using
-matroxfb_base as the frame buffer driver, your system may not be able to resume from
-suspend-to-disk.
