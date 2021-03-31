@@ -13,10 +13,12 @@ Table of Contents
 This BSP supports the following boards:
 
 	+ Intel NUC Platform: KabyLake-U Processor, Sunrise Point-LP PCH, (NUC7i5DNK1E)
+	+ Intel Tiger Lake UP3: 11th Gen Intel(R) Core(TM) processors
 
 2. Change History
 =================
 
+	- 2021/04 (LINUXPG-655) Add Tiger Lake UP3 support
 	- 2021/03 (LINCD-4821) Remove obsoleted and unsupported platforms: Harcuvar, Coffee Lake-S,
 	          Cascade Lake and Snow Ridge NS
 	- 2020/09 (LINUXPG-488) Add Snow Ridge NS support
@@ -120,6 +122,7 @@ The following features are not supported or validated:
 
 3.1.4 Known Issues
 ~~~~~~~~~~~~~~~~~~
+
 1) boot error: thermal thermal_zone3: failed to read out thermal zone
    It is the known upstream issue, reported in upstream:
    https://bugzilla.kernel.org/show_bug.cgi?id=201761
@@ -128,3 +131,92 @@ The following features are not supported or validated:
 2) boot error: [drm] failed to retrieve link info, disabling eDP
    No screen connect to eDP will cause the above error, mark it
    as un-validated feature.
+
+3.2 Intel Tiger Lake UP3
+------------------------
+
+11th Gen Intel(R) Core(TM) processors deliver a balance of performance and
+responsiveness in a low-power platform built on 10nm process technology.
+It combines Intel Iris Xe Graphics PCI Express 4.0 and Thunderbolt(TM)4/USB4.
+
+3.2.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may possibly have some issues.
+
+[BIOS Info]
+	Vendor: Intel Corporation
+	Version: TGLSFWI1.R00.3264.A00.2006251828
+	Release Date: 06/25/2020
+
+[CPU Info]
+	Vendor ID: GenuineIntel
+	CPU family: 6
+	Model: 140
+	Model name: 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+	Stepping: 1
+	QDF:QVBA
+
+[Board Info]
+	Tiger Lake UP3 4+2 DDR4 RVP
+	Tiger Lake PCH-LP
+	PD Controller version: 4.4.2
+	Thunderbolt Retimer version: 2.11
+
+3.2.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported on boards where
+the corresponding h/w features exist.
+
+	o Bus
+		+ I2C/SMBus:
+			+Intel Corporation Tiger Lake-LP SMBus Controller [8086:a0a3] (rev 20)
+		+ PCI Express 4.0
+
+	o Network
+		+ Intel E1000E Gigabit Ethernet:
+			+ Intel Corporation Ethernet Connection (13) I219-V [8086:15fc] (rev 20)
+		+ Wireless
+			+ Intel Corporation Wi-Fi 6 AX201 [8086:a0f0] (rev 20)
+			+ Intel Corporation Wireless-AC 9260 [8086:2526] (rev 29)
+
+	o USB
+		+ Intel Corporation Tiger Lake-LP USB 3.2 Gen 2x1 xHCI Host Controller [8086:a0ed] (rev 20)
+		+ Intel Corporation Tiger Lake-LP Thunderbolt USB Controller [8086:9a13] (rev 01)
+
+	o Storage
+		+ NVM Express: Intel Corporation SSD 660P Series [8086:f1a8] (rev 03)
+
+	o Multimedia
+		+ Graphics: Intel Corporation UHD Graphics [8086:9a49] (rev 01)
+			+ HDMI video
+			+ DP Type C video
+		+ Audio: Intel Corporation Tiger Lake-LP Smart Sound Technology Audio Controller [8086:a0c8] (rev 20)
+			+ HDMI audio
+			+ DP Type C audio
+
+	o Thunderbolt
+		+ Intel Corporation Tiger Lake-LP Thunderbolt NHI #0 [8086:9a1b] (rev 01)
+		+ Intel Corporation Tiger Lake-LP Thunderbolt NHI #1 [8086:9a1d] (rev 01)
+
+	o Power Management
+		+ CPU Freq: ACPI P-state
+		+ CPU Idle: ACPI C-state
+		+ ACPI S0
+		+ ACPI S3
+		+ ACPI S4
+
+	o Misc Devices
+		+ UART: 8250/16550A compatible serial port
+		+ RTC: PC-style CMOS RTC
+		+ Input device
+			+ PS2 mouse & keyboard
+			+ USB mouse & keyboard
+		+ Watchdog: WDAT (Watchdog Action Table)
+		+ HW Monitor: Intel CPU core temperature sensor
+
+	o Bluetooth
+
+	o TPM2.0
