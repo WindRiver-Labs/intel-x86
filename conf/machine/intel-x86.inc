@@ -64,8 +64,6 @@ XSERVER ?= "xserver-xorg \
 PREFERRED_PROVIDER_libglu = "libglu"
 PREFERRED_VERSION_virtual/mesa = "17.1.5"
 
-PREFERRED_VERSION_grub-efi ?= "2.04"
-
 PREFERRED_PROVIDER_virtual/kernel ??= "linux-yocto"
 PREFERRED_VERSION_linux-yocto ?= "5.10%"
 
