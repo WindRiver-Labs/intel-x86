@@ -1,7 +1,4 @@
 COMPATIBLE_MACHINE_intel-x86-64 = "intel-x86-64"
-COMPATIBLE_MACHINE_intel-haswell-64 = "intel-haswell-64"
-COMPATIBLE_MACHINE_intel-skylake-64 = "intel-skylake-64"
-COMPATIBLE_MACHINE_intel-skylake-avx512-64 = "intel-skylake-avx512-64"
 
 #add the depends of cdrtools-native to make sure it is
 #always built to support the usb-image & iso-image UEFI
