@@ -59,7 +59,7 @@ PREFERRED_VERSION_grub-efi ?= "2.04"
 PREFERRED_PROVIDER_virtual/kernel ??= "linux-yocto"
 PREFERRED_VERSION_linux-yocto ?= "5.2%"
 
-PREFERRED_VERSION_linux-firmware ?= "20200619"
+PREFERRED_VERSION_linux-firmware ?= "20201022"
 
 TARGET_QEMU_BIN = "qemu-system-x86_64"
 TARGET_QEMU_KERNEL="bzImage"
