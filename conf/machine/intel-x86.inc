@@ -83,3 +83,4 @@ do_image_wic[recrdeptask] += "do_bootimg"
 
 # DPDK enable and configuration
 COMPATIBLE_MACHINE_intel-x86_pn-dpdk = "${MACHINE}"
+PREFERRED_VERSION_dpdk ?= "19.11.%"
