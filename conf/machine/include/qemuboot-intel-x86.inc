@@ -1,4 +1,4 @@
-QB_MEM ?= "-m 1024"
+QB_MEM ?= "-m 2048"
 IMAGE_CLASSES += "qemuboot"
 
 QB_SYSTEM_NAME_intel-x86-64 = "qemu-system-x86_64"
