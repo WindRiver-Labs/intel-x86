@@ -38,7 +38,7 @@ KERNEL_IMAGETYPE = "bzImage"
 
 SERIAL_CONSOLES = "115200;ttyS0 115200;ttyUSB0"
 
-MACHINEOVERRIDES_append = ":intel-x86"
+MACHINEOVERRIDES_prepend = "intel-x86:"
 
 XSERVER ?= "xserver-xorg \
 	   xserver-xorg-extension-dri \
