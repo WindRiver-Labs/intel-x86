@@ -19,10 +19,3 @@ do_install_append_intel-x86() {
 KERNEL_VERSION_SANITY_SKIP = "1"
 SRCREV_machine_intel-x86 ?= "${AUTOREV}"
 SRCREV_meta_intel-x86 ?= "${AUTOREV}"
-
-FILESEXTRAPATHS_prepend_intel-x86 := "${THISDIR}/files:"
-SRC_URI_append_intel-x86 = " file://0001-Revert-iommu-vt-d-Remove-WO-permissions-on-second-le.patch \
-                             file://0002-Revert-iommu-vt-d-Preset-Access-Dirty-bits-for-IOVA-.patch \
-														 file://0003-iommu-vt-d-Preset-Access-Dirty-bits-for-IOVA-over-FL.patch \
-														 file://0004-iommu-vt-d-Remove-WO-permissions-on-second-level-pag.patch \
-                           "
