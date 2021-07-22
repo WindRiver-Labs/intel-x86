@@ -1,0 +1,11 @@
+intel-tcc
+=========
+This feature adds support for Intel Time Coordinated Computing(TCC) in intel-x86 BSP.
+
+To enable this feature, please add the following configuration parameter:
+
+    --template=feature/intel-tcc
+
+#@TYPE: Wrtemplate
+#@NAME: intel-tcc
+#@DESCRIPTION: Add Intel TCC to the image
