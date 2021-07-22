@@ -1,0 +1,11 @@
+intel-tsn
+=========
+This feature adds support for Time-Sensitive Networking(TSN) in intel-x86 BSP.
+
+To enable this feature, please add the following configuration parameter:
+
+    --template=feature/intel-tsn
+
+#@TYPE: Wrtemplate
+#@NAME: intel-tsn
+#@DESCRIPTION: Add TSN support to the image
