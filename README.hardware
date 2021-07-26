@@ -16,10 +16,12 @@ This BSP supports the following boards:
 	+ Intel Tiger Lake UP3: 11th Gen Intel(R) Core(TM) processors
 	+ Intel Ice Lake-SP: 3rd Gen Intel(R) Xeon(R) Scalable processor
 	+ Intel Snow Ridge: Intel Atom(R) P5362 processor
+	+ Intel Elkhart Lake: Intel Atom(R) x6425RE Processor
 
 2. Change History
 =================
 
+	- 2021/07 (LINUXPG-828) (LINUXPG-654) Add Elkhart Lake support
 	- 2021/05 (LINUXPG-658) Add Snow Ridge NS support
 	- 2021/04 (LINUXPG-656) Add Ice Lake-SP support
 	- 2021/04 (LINUXPG-655) Add Tiger Lake UP3 support
@@ -417,3 +419,102 @@ suspend-to-disk.
 
 do "rmmod ice; modprobe ice" to unload and reload ice driver as kernel said, otherwise you
 may suffer malfunctional ice NIC.
+
+3.5 Intel Elkhart Lake
+----------------------
+Intel Atom x6000E Series, and Intel Prentinum and Celeron N and J series Processors for Internet
+of Things(IoT) Applications.
+
+3.5.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may have some issues.
+
+[BIOS Info]
+	Vendor: Intel Corporation
+	Version: EHLSFWI1.R00.3092.A03.2102261658
+	Release Date: 02/26/2021
+
+[Processor Info]
+	CPU family:          6
+	Model:               150
+	Model name:          Intel Atom(R) x6425RE Processor @ 1.90GHz
+	Stepping:            1
+
+[Board Info]
+	Intel EHL CRB LP4 FABB
+
+3.5.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+	o Bus
+		+ SMBus:
+			+ SMBus [0c05]: Intel Corporation Device [8086:4b23] (rev 11)
+		+ PCI-Express
+		+ CAN Bus:
+			+ Intel Corporation Device 4bc1 (rev 11)
+			+ Intel Corporation Device 4bc2 (rev 11)
+
+	o Network
+		+ Intel Gigabit Ethernet:
+			+ Ethernet controller [0200]: Intel Corporation Device [8086:4ba0] (rev 11)
+			+ Ethernet controller [0200]: Intel Corporation Device [8086:4bb0] (rev 11)
+			+ Ethernet controller [0200]: Intel Corporation Device [8086:4b32] (rev 11)
+		+ WIFI:
+			+ Intel(R) Wireless-AC 9260
+
+	o USB
+		+ USB 3.0 XHCI controller:
+			+ USB controller [0c03]: Intel Corporation Device [8086:4b7d] (rev 11)
+			+ USB controller [0c03]: Intel Corporation Device [8086:4b7e] (rev 11)
+
+	o Storage
+		+ SATA:
+			+ SATA controller [0106]: Intel Corporation Device [8086:4b63] (rev 11)
+		+ SD:
+			+ SD Host controller: Intel Corporation Device 4b47 (rev 11)
+			+ SD Host controller: Intel Corporation Device 4b48 (rev 11)
+
+	o Multimedia
+		+ Graphics: VGA compatible controller: Intel Corporation Device 4571 (rev 01)
+			+ eDP
+			+ HDMI
+			+ DP
+		+ Audio: Multimedia audio controller: Intel Corporation Device 4b58 (rev 11)
+			+ HDMI Audio
+			+ DP Audio
+
+	o Power Management
+		+ Suspend to IDLE: ACPI S0
+		+ Suspend to MEMORY: ACPI S3
+		+ Suspend to DISK: ACPI S4
+		+ CPU Freq: ACPI P-state
+		+ CPU Idle: ACPI C-state
+
+	o Watchdog
+		+ Intel TCO Hardware WatchDog
+
+	o Misc Devices
+		+ Input device:
+			+ USB mouse & keyboard
+		+ UART
+
+	o Bluetooth
+
+	o TPM2.0
+
+	o EDAC
+
+	o Timed GPIO
+
+	o Time-Sensitive Networking
+
+	o Intel Time Coordinated Computing
+
+3.5.3 Notes
+~~~~~~~~~~~
+
+1) The SATA and TSN port are mutually exclusive to each other. Only one of the ports work at a time.
+Please use the coreesponding BIOS to support SATA or TSN.
+
+2) To use graphics device on EHL CRB, you may need to use i915.force_probe=4571 in kernel boot parameters.
