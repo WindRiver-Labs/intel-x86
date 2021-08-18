@@ -262,6 +262,9 @@ Note:
      both of them are same file only with different file name, because some versions
      of EFI only can recognize file with .efi suffix.
 
+  3) "console=ttyS0" used in above command is just an example, please use the correct index of ttyS
+     device on your board.
+
 
 4.3 Boot from the Live Images
 ========================

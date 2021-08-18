@@ -395,7 +395,16 @@ The following feature is not supported or validated.
 Intel C4xxx Series QAT support has not been released by Intel, please contact Intel
 or Wind River for status update.
 
-3.4.4 Known Issues
+3.4.4 Note
+~~~~~~~~~~
+
+There are three 8250/16550 compatible serial controllers [8086:18d8] on the board.
+They are numbered from ttyS4 to ttyS6 at MMIO address. ttyS0 to ttyS3 are reserved for
+serial ports at IO ports 0x3f8, 0x2f8, 0x3e8 and 0x2e8. We use "console=ttyS4" in kernel
+boot command line on our board. You may have different setup. Please choose the correct
+serial port according to your hardware.
+
+3.4.5 Known Issues
 ~~~~~~~~~~~~~~~~~~
 
 (1) Serial port console may be not resumed after system comes back from APCI S4.
