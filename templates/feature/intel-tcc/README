@@ -1,10 +1,97 @@
-intel-tcc
-=========
-This feature adds support for Intel Time Coordinated Computing(TCC) in intel-x86 BSP.
 
-To enable this feature, please add the following configuration parameter:
+	Intel Time Coordinated Computing Tools (Intel TCC Tools)
 
-    --template=feature/intel-tcc
+1. Overview
+===========
+Intel Time Coordinated Computing (Intel TCC) is a new set of features that
+augments the compute performance of Intel processors to address the stringent
+temporal requirements of real-time applications. Intel TCC reduces jitter and
+improves performance for latency sensitive applications. It helps to maximize
+efficiency by aggregating time-critical and non-time-constrained applications
+onto a single board. [1]
+
+2. Build Configuration
+======================
+This feature adds support for Intel TCC in intel-x86 BSP.
+In order to use the Intel TCC feature you must include the feature in your call to
+setup.sh
+
+   --template=feature/intel-tcc
+
+3. BIOS Setting
+===============
+You must enable Intel TCC mode in BIOS.
+
+4. Install Intel TCC Package
+============================
+Wind River doesn't provide Intel TCC tools package. You must download it from
+Intel's website yourself.
+
+Here is the link.
+
+https://software.intel.com/content/www/us/en/develop/tools/time-coordinated-computing-tools/
+tcc-tools-download.html?operatingsystem=linux&distributions=webdownload&options=offline
+
+This package includes API library, real-time configuration and optimization tools,
+sample applications and documentation.
+
+After downloading the package, you can install it on the target with the following
+commands.
+
+  # ./l_tcc_tools_p_2021.2.0.287_offline.sh -x -f .
+  # cd l_tcc_tools_p_2021.2.0.287_offline/
+  # ./install.sh --action=install --eula=accept --intel-sw-improvement-program-consent=no --silent
+
+Once the installation is completed, you can find it in /opt/intel/oneapi.
+
+Optional: You may find that some TCC tools depend on libjson-c.so.4 and this shared
+object file is missing. This is because Wind River Linux provides newer version of
+json-c with libjson-c.so.5. You can use the following commands to install older version
+of json-c and libjson-c.so.4 will be installed in /usr/local/lib.
+
+  # git clone https://github.com/json-c/json-c.git
+  # cd json-c
+  # git reset --hard 985c46fec39d1d3043f98e8d8cdb9d040131b3bb
+  # ./autogen.sh
+  # ./configure
+  # make
+  # make install
+  # export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+
+Now you can build samples. For example:
+
+  # source /opt/intel/oneapi/setvars.sh
+  # cd /opt/intel/oneapi/tcc_tools/2021.2.0/samples/tcc_cache_allocation_sample
+  # make
+
+5. Run Intel TCC tools
+======================
+Before running TCC tools, you need to load kernel module tcc_buffer.ko and set environment first.
+
+  # modprobe tcc_buffer
+  # source /opt/intel/oneapi/setvars.sh
+
+Now you can run TCC tools. For example:
+
+  # tcc_single_measurement_sample --approximation  10 --deadline 2000,ns --iterations 25 --emulate-outliers
+
+    Running with arguments:
+        approximation = 10,
+        iterations = 25,
+        outliers = True,
+        deadline = 2000 ns,
+    Latency exceeding deadline: 172760 CPU cycles (91815 nsec) (91 usec)
+    Latency exceeding deadline: 121720 CPU cycles (64689 nsec) (64 usec)
+    Latency exceeding deadline: 120944 CPU cycles (64277 nsec) (64 usec)
+    Latency exceeding deadline: 120816 CPU cycles (64209 nsec) (64 usec)
+    Latency exceeding deadline: 120673 CPU cycles (64133 nsec) (64 usec)
+    Approximation #10 is:0.636620
+    [Approximation] Iterations 25; iteration duration [ns]: avg=14237.000 min=321.000 max=91815.000 jitter=91494.000
+    Number of exceeding deadlines: 5 of 25
+
+6. Reference
+============
+[1] https://software.intel.com/content/www/us/en/develop/tools/time-coordinated-computing-tools.html
 
 #@TYPE: Wrtemplate
 #@NAME: intel-tcc
