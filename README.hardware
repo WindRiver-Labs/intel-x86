@@ -527,3 +527,6 @@ in a different environment it may have some issues.
 Please use the coreesponding BIOS to support SATA or TSN.
 
 2) To use graphics device on EHL CRB, you may need to use i915.force_probe=4571 in kernel boot parameters.
+
+3) If you enable Intel TCC mode in BIOS, you may not be able to use CPU frequency scaling, neither by
+acpi-cpufreq, nor by intel_pstate.
