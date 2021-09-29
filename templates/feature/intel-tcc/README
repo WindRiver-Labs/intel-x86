@@ -25,7 +25,8 @@ You must enable Intel TCC mode in BIOS.
 4. Install Intel TCC Package
 ============================
 Wind River doesn't provide Intel TCC tools package. You must download it from
-Intel's website yourself.
+Intel's website yourself and make sure you comply with the terms and conditions
+under the Intel license.
 
 Here is the link.
 
