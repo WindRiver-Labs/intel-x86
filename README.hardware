@@ -22,10 +22,12 @@ This BSP supports the following boards:
 	+ Intel Ice Lake Y platform: Ice Lake U42 Processor
 	+ Intel Comet Lake S: Intel Core Processor Family, PCH: CMP-H/CMP-V
 	+ Intel Whiskey Lake U platform: CoffeeLake Processor, Cannon Lake PCH (Whiskey Lake U)
+	+ Intel Idaville LCC: Intel Xeon D Processors, Ice Lake-D SoC, (Brighton City)
 
 2. Change History
 =================
 
+	- 2021/12 (LINUXPG-360) Add Icelake-D support
 	- 2020/10 (LINUXPG-582) Add Intel Whiskey Lake U support
 	- 2020/09 (LINUXPG-451) Add Comet Lake S Support
 	- 2020/07 (LINUXPG-457) Add Intel Ice Lake-Y support
@@ -1133,3 +1135,91 @@ Change "Intel Advanced Menu -> PCH-IO Configuration -> Enable TCO timer" to "ena
 
 1) DP (DisplayPort) hotplug malfunction:
 The DP hotplug would not work if the board boots with the DP connector unplugged.
+
+
+3.12 Intel Idaville LCC(Ice-D SoC)
+-----------------------------------------
+
+Intel Idaville LCC featuring Intel Xeon D Porcessor, specifically at edge
+of Data Center and Network, with supoort of QAT, 50G throughput Ethernet.
+
+3.12.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may possibly have some issues.
+
+[Board info]
+	Vendor: Intel Corporation
+	Platform: Intel Idaville Brighton City
+	SoC Codename: ICE-D
+
+[BIOS info]
+	BIOS Version: IDVLCRB1.86B.0020.D60.2109070127
+
+[Processor info]
+	vendor_id: GenuineIntel
+	Core: 8
+	Thread: 16
+	ID: 0x000606C0
+	Stepping: 0
+	Microcode Rev: 0xfd000220
+
+[Chipset info]
+	Codename: ICE D
+
+3.12.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported on boards where
+the corresponding h/w features exist.
+
+	o Bus
+		+ PCI/PCI-Express
+		+ I2C/SMBus:
+			+ Intel Corporation SMBus controller
+
+	o Network
+		+ Intel Ethernet on board:
+			+ Intel Corporation I210 Gigabit Network Connection [8086:1533] (rev 03)
+		+ Intel 1xQSFP28 and 4xSFP28 NIC
+			+ Intel(R) Ethernet Connection E823-L for QSFP (8086-1533)(ice)
+			+ Intel(R) Ethernet Connection E823-L for SFP (8086-124D) (ice)
+
+	o USB
+		+ USB Host:
+			+ USB 2.0 EHCI controller
+			+ USB 3.0 XHCI controller
+
+	o Storage
+		+ SATA: SATA: AHCI SATA controller
+		+ SATA: MiniSAS x8
+		+ MMC: SD Host controller
+
+	o Multimedia
+		+ Graphics:
+			+ ASPEED Technology, Inc. ASPEED Graphics Family [1a03:2000] (rev 41) (prog-if 00 [VGA controller])
+
+	o Misc Devices
+		+ UART: 8250/16550A compatible serial port
+		+ Input device
+			+ USB mouse & keyboard
+
+	o Intel QuickAssit Technology
+		+ Co-processor [0b40]: Intel Corporation Device 2xxx [8086:18ee]
+
+3.12.3 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated:
+
+	x watchdog
+	x S3/S4
+
+3.12.4 Known Issue
+~~~~~~~~~~~~~~~~~
+
+
+3.12.5 Note
+~~~~~~~~~~
+1) 4xSFP is not enabled by default, flash 100G_8x10G NVM image can enable it.
