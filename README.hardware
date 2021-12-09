@@ -23,6 +23,7 @@ This BSP supports the following boards:
 	+ Intel Comet Lake S: Intel Core Processor Family, PCH: CMP-H/CMP-V
 	+ Intel Whiskey Lake U platform: CoffeeLake Processor, Cannon Lake PCH (Whiskey Lake U)
 	+ Intel Idaville LCC: Intel Xeon D Processors, Ice Lake-D SoC, (Brighton City)
+	+ Intel Idaville HCC: Intel Xeon D Processors, Ice Lake-D SoC, (Moro City)
 
 2. Change History
 =================
@@ -1223,3 +1224,94 @@ The following features are not supported or validated:
 3.12.5 Note
 ~~~~~~~~~~
 1) 4xSFP is not enabled by default, flash 100G_8x10G NVM image can enable it.
+
+
+3.13 Intel Idaville HCC(Ice-D SoC)
+-----------------------------------------
+
+Intel Idaville LCC featuring Intel Xeon D Porcessor, specifically at edge
+of Data Center and Network, with supoort of QAT, 100G throughput Ethernet.
+
+3.13.1 Validated Board Info
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This BSP is only validated in following environment. If you use this BSP
+in a different environment it may possibly have some issues.
+
+[Board info]
+	Vendor: Intel Corporation
+	Platform: Intel Idaville Moro City
+	SoC Codename: ICE-D
+
+[BIOS info]
+	BIOS Version: IDVLCRB1.86B.0019.D91.2106150044 06/15/2021
+
+[Processor info]
+	vendor_id: GenuineIntel
+	Core: 16
+	Thread: 32
+	ID: 0x000606C1
+	Stepping: 1
+	Microcode Rev: 0xd10000b0
+
+[Chipset info]
+	Codename: ICE Lake-D
+
+3.13.2 Supported Features
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following BSP features are validated and supported on boards where
+the corresponding h/w features exist.
+
+	o Bus
+		+ PCI/PCI-Express
+		+ I2C/SMBus:
+			+ Intel Corporation SMBus controller
+
+	o Network
+		+ Intel Ethernet:
+			+ Intel Corporation Ethernet Controller X710 for 10GBASE-T [8086:15ff] (rev 02)
+		+ Intel 2xQSFP28
+			+ Intel(R) Ethernet Connection E823-C for QSFP (8086-188B)(ice)
+
+	o USB
+		+ USB Host:
+			+ USB 2.0 EHCI controller
+			+ USB 3.0 XHCI controller
+
+	o Storage
+		+ SATA: SATA: AHCI SATA controller
+		+ SATA: MiniSAS x8
+		+ MMC: SD Host controller
+
+	o Multimedia
+		+ Graphics:
+			+ ASPEED Technology, Inc. ASPEED Graphics Family [1a03:2000] (rev 41) (prog-if 00 [VGA controller])
+
+	o Misc Devices
+		+ UART: 8250/16550A compatible serial port
+		+ Input device
+			+ USB mouse & keyboard
+
+	o Intel QuickAssit Technology
+		+ Co-processor [0b40]: Intel Corporation C4xxx Series QAT [8086:18a0]
+
+3.13.3 Unsupported Features
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The following features are not supported or validated:
+
+	x watchdog
+	x S3/S4
+
+3.13.4 Known Issue
+~~~~~~~~~~~~~~~~~
+1) 20.D60 bios may exist below QAT issue when run cpa_sample_code
+   [error] LacRsa_ProcessKeyCb() - : The number n = p * q is out of range or invalid
+   The issue is under investigated by Intel, version 0019.D91 is recommended to use
+   to avoid this issue.
+
+
+3.13.5 Note
+~~~~~~~~~~
+1) only 1 QSFP is enabled by default, flash 8x10_QSFP or 2x100_QSFP NVM image can enable another one.
