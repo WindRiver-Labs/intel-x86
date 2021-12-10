@@ -1244,7 +1244,7 @@ in a different environment it may possibly have some issues.
 	SoC Codename: ICE-D
 
 [BIOS info]
-	BIOS Version: IDVLCRB1.86B.0019.D91.2106150044 06/15/2021
+	BIOS Version: IDVLCRB1.86B.0021.D09.2111010103 11/01/2021
 
 [Processor info]
 	vendor_id: GenuineIntel
@@ -1252,7 +1252,7 @@ in a different environment it may possibly have some issues.
 	Thread: 32
 	ID: 0x000606C1
 	Stepping: 1
-	Microcode Rev: 0xd10000b0
+	Microcode Rev: 0x1000132
 
 [Chipset info]
 	Codename: ICE Lake-D
@@ -1292,6 +1292,7 @@ the corresponding h/w features exist.
 		+ UART: 8250/16550A compatible serial port
 		+ Input device
 			+ USB mouse & keyboard
+		+ watchdog: Intel TCO WatchDog Timer
 
 	o Intel QuickAssit Technology
 		+ Co-processor [0b40]: Intel Corporation C4xxx Series QAT [8086:18a0]
@@ -1301,15 +1302,13 @@ the corresponding h/w features exist.
 
 The following features are not supported or validated:
 
-	x watchdog
 	x S3/S4
 
 3.13.4 Known Issue
 ~~~~~~~~~~~~~~~~~
 1) 20.D60 bios may exist below QAT issue when run cpa_sample_code
    [error] LacRsa_ProcessKeyCb() - : The number n = p * q is out of range or invalid
-   The issue is under investigated by Intel, version 0019.D91 is recommended to use
-   to avoid this issue.
+   Upgrade to the latest version 0021.D09 can fix this issue.
 
 
 3.13.5 Note
